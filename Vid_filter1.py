@@ -17,8 +17,11 @@ class app:
         self.currentDir = StringVar()
         self.currentDir.set(os.getcwd())
         self.filename = StringVar()
-        self.fpath = None
-        self.element = None
+        #self.fpath = None
+        #self.element = None
+        #self.fr = 0
+        #self.nframes = 0
+        #self.height = 0
         self.file = None
         self.canceled = False
         self.frames_list = []
@@ -52,10 +55,15 @@ class app:
             self.nframes = (self.video_streams[0]['nb_frames'])
             self.height = (self.video_streams[0]['height'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
+            #if int(self.nframes) <= int(self.height):
             self.vidName = (self.file).split("/")[-1]
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
+            #else:
+                #messagebox.showwarning("TOO LONG VIDEO",'''Your video is {} frrames long. You need
+#a <= {} frames long video for filtering.'''.format(self.nframes,self.height))
+                #self.file = None
 
     def cancel(self):
         self.canceled = True
@@ -146,3 +154,4 @@ class app:
 
 if __name__=="__main__":
     app()
+
