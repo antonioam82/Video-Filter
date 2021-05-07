@@ -19,9 +19,6 @@ class app:
         self.filename = StringVar()
         self.fpath = None
         self.element = None
-        self.fr = 0
-        self.nframes = 0
-        #self.height = 0
         self.file = None
         self.canceled = False
         self.frames_list = []
@@ -61,7 +58,7 @@ class app:
                 self.frLabel.configure(text=self.fr)
                 self.nframesLabel.configure(text=self.nframes)
             else:
-                messagebox.showwarning("TOO LONG VIDEO",'''Your video is {} frrames long. You need
+                messagebox.showwarning("TOO LONG VIDEO",'''Your video is {} frames long. You need
 a <= {} frames long video for filtering.'''.format(self.nframes,self.height))
                 self.file = None
 
