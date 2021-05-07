@@ -52,15 +52,10 @@ class app:
             self.nframes = (self.video_streams[0]['nb_frames'])
             self.height = (self.video_streams[0]['height'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
-            if int(self.nframes) <= int(self.height):
-                self.vidName = (self.file).split("/")[-1]
-                self.filename.set(self.vidName)
-                self.frLabel.configure(text=self.fr)
-                self.nframesLabel.configure(text=self.nframes)
-            else:
-                messagebox.showwarning("TOO LONG VIDEO",'''Your video is {} frames long. You need
-a <= {} frames long video for filtering.'''.format(self.nframes,self.height))
-                self.file = None
+            self.vidName = (self.file).split("/")[-1]
+            self.filename.set(self.vidName)
+            self.frLabel.configure(text=self.fr)
+            self.nframesLabel.configure(text=self.nframes)
 
     def cancel(self):
         self.canceled = True
@@ -88,10 +83,11 @@ a <= {} frames long video for filtering.'''.format(self.nframes,self.height))
 
         name,ex = os.path.splitext(self.vidName)
         self.vid_name = name+'(filtered)'+'.mp4'
-        out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'mp4v'), eval(self.fr), size)#
+        out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
         print("CREATING VIDEO...")
         C = 0
-        for i in range(len(frame_array[i])):
+        print('FA:',len(frame_array))
+        for i in range(len(frame_array)):
             C+=1
             if C <= (len(frame_array)):
                 out.write(frame_array[i])
