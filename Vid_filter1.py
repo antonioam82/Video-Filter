@@ -24,7 +24,8 @@ class app:
 
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
-        Button(self.root,text="SEARCH",height=2,width=25,bg="light blue1",command=self.open_file).place(x=709,y=25)
+        self.btnSearch = Button(self.root,text="SEARCH",height=2,width=25,bg="light blue1",command=self.open_file)
+        self.btnSearch.place(x=709,y=25)
         self.btnStart = Button(self.root,text="START FILTERING",width=97,height=2,bg="light green",command=self.init_task)
         self.btnStart.place(x=8,y=77)
         Button(self.root,text="CANCEL",height=2,width=25,bg="light blue1",command=self.cancel).place(x=709,y=77)
@@ -60,48 +61,55 @@ class app:
     def cancel(self):
         self.canceled = True
         self.prog_bar.stop()
-
-    def create_new_video(self):
-        frame_array = []
-        counter = 0
-        dif = 0
-        for i in range(len(self.frames_list)):
-            counter+=1
-
-            filename = self.frames_list[i]
-            img = cv.imread(filename)
-            height, width, layers = img.shape
-            size = (width,height)
-
-            for k in range(1):
-                frame_array.append(img)
-
-            percent = counter*100/int(self.nframes)
-            self.prog_bar.step(percent-dif)
-            self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-            dif=percent
-
-        name,ex = os.path.splitext(self.vidName)
-        self.vid_name = name+'(filtered)'+'.mp4'
-        out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
-        print("CREATING VIDEO...")
-        #C = 0
-        print('FA:',len(frame_array))
-        self.processLabel.configure(text="FINALIZING VIDEO...")
-        for i in range(len(frame_array)):
-            #C+=1
-            #if C <= (len(frame_array)):
-            out.write(frame_array[i])
-                
-        
-        out.release()
-        
+        self.processLabel.configure(text="CANCELLED")
+        self.btnSart.configure(state='normal')
+        self.btnSearch.configure(state='normal')
         for i in self.frames_list:
             os.remove(i)
-        self.frames_list = []
 
-        print("TASK COMPLETED")
-        print("FRA: ",len(frame_array))
+    def create_new_video(self):
+        if self.canceled == False:
+            frame_array = []
+            counter = 0
+            dif = 0
+            for i in range(len(self.frames_list)):
+                counter+=1
+
+                filename = self.frames_list[i]
+                img = cv.imread(filename)
+                height, width, layers = img.shape
+                size = (width,height)
+
+                for k in range(1):
+                    frame_array.append(img)
+
+                percent = counter*100/int(self.nframes)
+                self.prog_bar.step(percent-dif)
+                self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
+                dif=percent
+
+            name,ex = os.path.splitext(self.vidName)
+            self.vid_name = name+'(filtered)'+'.mp4'
+            out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
+            print("CREATING VIDEO...")
+            #C = 0
+            print('FA:',len(frame_array))
+            self.processLabel.configure(text="FINALIZING VIDEO...")
+            for i in range(len(frame_array)):
+                #C+=1
+                #if C <= (len(frame_array)):
+                out.write(frame_array[i])
+                
+        
+            out.release()
+        
+            for i in self.frames_list:
+                os.remove(i)
+            self.frames_list = []
+
+            print("TASK COMPLETED")
+            print("FRA: ",len(frame_array))
+            
             
         
 
@@ -117,6 +125,7 @@ class app:
                     self.canceled = False
                 
                     self.btnStart.configure(state='disabled')
+                    self.btnSearch.configure(state='disabled')
                     self.cam = cv.VideoCapture(self.file)
                     ret = True
                     
@@ -140,6 +149,7 @@ class app:
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
+                self.btnSearch.configure(state='normal')
             
 
     def init_task(self):
