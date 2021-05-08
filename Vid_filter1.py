@@ -86,11 +86,13 @@ class app:
         print("CREATING VIDEO...")
         C = 0
         print('FA:',len(frame_array))
+        self.processLabel.configure(text="FINALIZING VIDEO...")
         for i in range(len(frame_array)):
             C+=1
             if C <= (len(frame_array)):
                 out.write(frame_array[i])
                 
+        
         out.release()
         
         for i in self.frames_list:
