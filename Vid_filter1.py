@@ -57,58 +57,54 @@ class app:
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
 
-
     def cancel(self):
         self.canceled = True
         self.prog_bar.stop()
         self.processLabel.configure(text="CANCELLED")
-        self.btnSart.configure(state='normal')
+        self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
         for i in self.frames_list:
             os.remove(i)
 
     def create_new_video(self):
-        if self.canceled == False:
-            frame_array = []
-            counter = 0
-            dif = 0
-            for i in range(len(self.frames_list)):
-                counter+=1
+        #if self.canceled == False:
+        frame_array = []
+        counter = 0
+        dif = 0
+        for i in range(len(self.frames_list)):
+            counter+=1
 
-                filename = self.frames_list[i]
-                img = cv.imread(filename)
-                height, width, layers = img.shape
-                size = (width,height)
+            filename = self.frames_list[i]
+            img = cv.imread(filename)
+            height, width, layers = img.shape
+            size = (width,height)
 
-                for k in range(1):
-                    frame_array.append(img)
+            for k in range(1):
+                frame_array.append(img)
 
-                percent = counter*100/int(self.nframes)
-                self.prog_bar.step(percent-dif)
-                self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                dif=percent
+            percent = counter*100/int(self.nframes)
+            self.prog_bar.step(percent-dif)
+            self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
+            dif=percent
 
-            name,ex = os.path.splitext(self.vidName)
-            self.vid_name = name+'(filtered)'+'.mp4'
-            out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
-            print("CREATING VIDEO...")
-            print('FA:',len(frame_array))
-            self.processLabel.configure(text="FINALIZING VIDEO...")
-            for i in range(len(frame_array)):
-                out.write(frame_array[i])
-            
-            out.release()
+        name,ex = os.path.splitext(self.vidName)
+        self.vid_name = name+'(filtered)'+'.mp4'
+        out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
+        print("CREATING VIDEO...")
+        print('FA:',len(frame_array))
+        self.processLabel.configure(text="FINALIZING VIDEO...")
+        for i in range(len(frame_array)):
+            out.write(frame_array[i])
+
+        out.release()
         
-            for i in self.frames_list:
-                os.remove(i)
-            self.frames_list = []
+        for i in self.frames_list:
+            os.remove(i)
+        self.frames_list = []
 
-            print("TASK COMPLETED")
-            print("FRA: ",len(frame_array))
+        print("TASK COMPLETED")
+        print("FRA: ",len(frame_array))
             
-            
-        
-
     def filtering(self):
         if self.file:
             directory = filedialog.askdirectory()
@@ -138,6 +134,7 @@ class app:
                             self.prog_bar.step(percent-dif)
                             self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
                             dif=percent
+                    #if self.canceled == False:
                     self.create_new_video()
                     print("NF: ",len(self.frames_list))
                     self.processLabel.configure(text="PROCESS: ENDED")
