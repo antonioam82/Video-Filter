@@ -42,9 +42,10 @@ class app:
         self.root.mainloop()
 
     def open_file(self):
-        self.file = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
+        self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-        if self.file:
+        if self.dir:
+            self.file = self.dir
             probe = ffmpeg.probe(self.file)
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
