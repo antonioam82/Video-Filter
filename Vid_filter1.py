@@ -84,13 +84,13 @@ class app:
         self.vid_name = name+'(filtered)'+'.mp4'
         out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
         print("CREATING VIDEO...")
-        C = 0
+        #C = 0
         print('FA:',len(frame_array))
         self.processLabel.configure(text="FINALIZING VIDEO...")
         for i in range(len(frame_array)):
-            C+=1
-            if C <= (len(frame_array)):
-                out.write(frame_array[i])
+            #C+=1
+            #if C <= (len(frame_array)):
+            out.write(frame_array[i])
                 
         
         out.release()
@@ -130,7 +130,7 @@ class app:
                 
                             percent = counter*100/int(self.nframes)
                             self.prog_bar.step(percent-dif)
-                            self.processLabel.configure(text="PROCESSING FRAMES: {}%".format(int(percent)))
+                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
                             dif=percent
                     self.create_new_video()
                     print("NF: ",len(self.frames_list))
