@@ -94,12 +94,9 @@ class app:
         self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
         out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
         print("CREATING VIDEO...")
-        #C = 0
         print('FA:',len(frame_array))
         self.processLabel.configure(text="FINALIZING VIDEO...")
         for i in range(len(frame_array)):
-            #C+=1
-            #if C <= (len(frame_array)):
             out.write(frame_array[i])
 
         out.release()
@@ -111,9 +108,6 @@ class app:
             final_video = movie('filteredVideo.mp4')
 
         final_video.save(self.vid_name)
-        
-
-        
         
         for i in self.frames_list:
             os.remove(i)
