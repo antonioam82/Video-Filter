@@ -156,18 +156,19 @@ class app:
                     print("NF: ",len(self.frames_list))
                     self.processLabel.configure(text="PROCESS: ENDED")
                     messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
+                    os.remove('filteredVideo.mp4')
+                    os.remove('VidAudioInfo.mp3')
+                    
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
-                os.remove('filteredVideo.mp4')
-                os.remove('VidAudioInfo.mp3')
-            
-
+                
     def init_task(self):
         t = threading.Thread(target=self.filtering)
         t.start()
 
 if __name__=="__main__":
     app()
+
 
