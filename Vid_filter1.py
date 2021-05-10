@@ -5,6 +5,7 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
+from mhmovie.code import *
 from pydub import AudioSegment
 import os
 
@@ -90,8 +91,8 @@ class app:
             dif=percent
 
         name,ex = os.path.splitext(self.vidName)
-        self.vid_name = name+'(filtered)'+'.mp4'
-        out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
+        self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
+        out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
         print("CREATING VIDEO...")
         #C = 0
         print('FA:',len(frame_array))
@@ -102,6 +103,17 @@ class app:
             out.write(frame_array[i])
 
         out.release()
+
+        if 'VidAudioInfo.mp3' in os.listdir():
+            final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
+            print('BOTH')
+        else:
+            final_video = movie('filteredVideo.mp4')
+
+        final_video.save(self.vid_name)
+        
+
+        
         
         for i in self.frames_list:
             os.remove(i)
@@ -117,7 +129,7 @@ class app:
                 try:
                     os.chdir(directory)
                     audio = AudioSegment.from_file(self.file)#
-                    audio.export("Vid_audio_info.mp3",format="mp3")
+                    audio.export("VidAudioInfo.mp3",format="mp3")
                     
                     self.currentDir.set(os.getcwd())
                     dif = 0
@@ -142,7 +154,7 @@ class app:
                             self.prog_bar.step(percent-dif)
                             self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
                             dif=percent
-                            
+                    #if self.canceled == False:
                     self.create_new_video()
                     print("NF: ",len(self.frames_list))
                     self.processLabel.configure(text="PROCESS: ENDED")
