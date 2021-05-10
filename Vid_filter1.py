@@ -23,6 +23,7 @@ class app:
         self.canceled = False
         self.frames_list = []
         
+
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
         self.btnSearch = Button(self.root,text="SEARCH",height=2,width=25,bg="light blue1",command=self.open_file)
@@ -91,7 +92,8 @@ class app:
 
         name,ex = os.path.splitext(self.vidName)
         self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
-        out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
+        frame_rate = eval(self.fr)
+        out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)#'mp4v'
         print("CREATING VIDEO...")
         print('FA:',len(frame_array))
         self.processLabel.configure(text="FINALIZING VIDEO...")
@@ -100,6 +102,7 @@ class app:
 
         out.release()
 
+        self.processLabel.configure(text="ADDING AUDIO...")
         if 'VidAudioInfo.mp3' in os.listdir():
             final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
             print('BOTH')
@@ -107,7 +110,7 @@ class app:
             final_video = movie('filteredVideo.mp4')
 
         final_video.save(self.vid_name)
-        
+       
         for i in self.frames_list:
             os.remove(i)
         self.frames_list = []
@@ -121,6 +124,9 @@ class app:
             if directory:
                 try:
                     os.chdir(directory)
+                    self.btnStart.configure(state='disabled')
+                    self.btnSearch.configure(state='disabled')
+                    self.processLabel.configure(text="GETTING AUDIO DATA...")
                     audio = AudioSegment.from_file(self.file)#
                     audio.export("VidAudioInfo.mp3",format="mp3")
                     
@@ -129,8 +135,7 @@ class app:
                     counter = 0
                     self.canceled = False
                 
-                    self.btnStart.configure(state='disabled')
-                    self.btnSearch.configure(state='disabled')
+                    
                     self.cam = cv.VideoCapture(self.file)
                     ret = True
                     
