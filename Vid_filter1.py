@@ -5,6 +5,7 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
+from pydub import AudioSegment
 import os
 
 class app:
@@ -47,6 +48,7 @@ class app:
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
         if self.dir:
             self.file = self.dir
+            
             probe = ffmpeg.probe(self.file)
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
@@ -91,9 +93,12 @@ class app:
         self.vid_name = name+'(filtered)'+'.mp4'
         out = cv.VideoWriter(self.vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)#'mp4v'
         print("CREATING VIDEO...")
+        #C = 0
         print('FA:',len(frame_array))
         self.processLabel.configure(text="FINALIZING VIDEO...")
         for i in range(len(frame_array)):
+            #C+=1
+            #if C <= (len(frame_array)):
             out.write(frame_array[i])
 
         out.release()
@@ -111,6 +116,9 @@ class app:
             if directory:
                 try:
                     os.chdir(directory)
+                    audio = AudioSegment.from_file(self.file)#
+                    audio.export("Vid_audio_info.mp3",format="mp3")
+                    
                     self.currentDir.set(os.getcwd())
                     dif = 0
                     counter = 0
@@ -134,7 +142,7 @@ class app:
                             self.prog_bar.step(percent-dif)
                             self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
                             dif=percent
-                    #if self.canceled == False:
+                            
                     self.create_new_video()
                     print("NF: ",len(self.frames_list))
                     self.processLabel.configure(text="PROCESS: ENDED")
