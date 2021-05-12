@@ -131,10 +131,12 @@ class app:
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
-                    self.processLabel.configure(text="GETTING AUDIO DATA...")
-                    audio = AudioSegment.from_file(self.file)#
-                    audio.export("VidAudioInfo.mp3",format="mp3")
-                    
+                    try:
+                        self.processLabel.configure(text="GETTING AUDIO DATA...")
+                        audio = AudioSegment.from_file(self.file)#
+                        audio.export("VidAudioInfo.mp3",format="mp3")
+                    except:
+                        pass
                     self.currentDir.set(os.getcwd())
                     dif = 0
                     self.counter = 0
