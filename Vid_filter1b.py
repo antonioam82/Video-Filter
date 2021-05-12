@@ -160,6 +160,10 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
+                    if 'VidAudioInfo.mp3' in os.listdir():
+                        os.remove('VidAudioInfo.mp3')
+                    if 'filteredVideo.mp4' in os.listdir():
+                        os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
