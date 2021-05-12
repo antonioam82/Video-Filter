@@ -110,18 +110,16 @@ class app:
             self.processLabel.configure(text="ADDING AUDIO...")
             if 'VidAudioInfo.mp3' in os.listdir():
                 final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
+                os.remove('VidAudioInfo.mp3')
                 print('BOTH')
             else:
                 final_video = movie('filteredVideo.mp4')
-
+            os.remove('filteredVideo.mp4')
             final_video.save(self.vid_name)
         
             for i in self.frames_list:
                 os.remove(i)
             self.frames_list = []
-
-            print("TASK COMPLETED")
-            print("FRA: ",len(frame_array))
             
     def filtering(self):
         if self.file:
@@ -159,13 +157,9 @@ class app:
                             dif=self.percent
                             
                     self.create_new_video()
-                    print("NF: ",len(self.frames_list))
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                        os.remove('filteredVideo.mp4')
-                        os.remove('VidAudioInfo.mp3')
-                    
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
