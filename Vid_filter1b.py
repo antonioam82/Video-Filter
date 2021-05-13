@@ -104,7 +104,7 @@ class app:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
             if self.question == "yes":
-                os.remove(self.vid_name)
+                #os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
                 out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)#'mp4v'
                 print("CREATING VIDEO...")
