@@ -23,6 +23,7 @@ class app:
         self.canceled = False
         self.frames_list = []
         self.vid_name = None
+        #self.question = "yes"
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -59,6 +60,7 @@ class app:
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
+        
 
     def cancel(self):
         self.canceled = True
@@ -78,6 +80,7 @@ class app:
         frame_array = []
         counter = 0
         dif = 0
+        self.question = "yes"
         if len(self.frames_list) > 0:
             for i in range(len(self.frames_list)):
                 counter+=1
@@ -97,25 +100,30 @@ class app:
 
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
-            frame_rate = eval(self.fr)
-            out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)#'mp4v'
-            print("CREATING VIDEO...")
-            print('FA:',len(frame_array))
-            self.processLabel.configure(text="FINALIZING VIDEO...")
-            for i in range(len(frame_array)):
-                out.write(frame_array[i])
+            if self.vid_name in os.listdir():
+                self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
-            out.release()
+            if self.question == "yes":
+                os.remove(self.vid_name)
+                frame_rate = eval(self.fr)
+                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)#'mp4v'
+                print("CREATING VIDEO...")
+                print('FA:',len(frame_array))
+                self.processLabel.configure(text="FINALIZING VIDEO...")
+                for i in range(len(frame_array)):
+                    out.write(frame_array[i])
 
-            self.processLabel.configure(text="ADDING AUDIO...")
-            if 'VidAudioInfo.mp3' in os.listdir():
-                final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
-                #os.remove('VidAudioInfo.mp3')
-                print('BOTH')
-            else:
-                final_video = movie('filteredVideo.mp4')
-            #os.remove('filteredVideo.mp4')
-            final_video.save(self.vid_name)
+                out.release()
+
+                self.processLabel.configure(text="ADDING AUDIO...")
+                if 'VidAudioInfo.mp3' in os.listdir():
+                    final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
+                    #os.remove('VidAudioInfo.mp3')
+                    print('BOTH')
+                else:
+                    final_video = movie('filteredVideo.mp4')
+                #os.remove('filteredVideo.mp4')
+                final_video.save(self.vid_name)
         
             for i in self.frames_list:
                 os.remove(i)
@@ -158,7 +166,7 @@ class app:
                             
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
-                    if self.vid_name:
+                    if self.vid_name and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
