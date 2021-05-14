@@ -83,27 +83,28 @@ class app:
         self.question = "yes"
         if len(self.frames_list) > 0:
             for i in range(len(self.frames_list)):
-                counter+=1
+                if self.canceled == False:
+                    counter+=1
 
-                filename = self.frames_list[i]
-                img = cv.imread(filename)
-                height, width, layers = img.shape
-                size = (width,height)
+                    filename = self.frames_list[i]
+                    img = cv.imread(filename)
+                    height, width, layers = img.shape
+                    size = (width,height)
 
-                for k in range(1):
-                    frame_array.append(img)
+                    for k in range(1):
+                        frame_array.append(img)
 
-                percent = counter*100/int(self.nframes)
-                self.prog_bar.step(percent-dif)
-                self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                dif=percent
+                    percent = counter*100/int(self.nframes)
+                    self.prog_bar.step(percent-dif)
+                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
+                    dif=percent
 
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
-            if self.vid_name in os.listdir():
+            if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
-            if self.question == "yes":
+            if self.question == "yes" and self.canceled == False:
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
@@ -167,7 +168,7 @@ class app:
                             
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
-                    if self.vid_name and self.question == "yes":
+                    if self.vid_name and self.canceled == False: #self.question == "yes"
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
