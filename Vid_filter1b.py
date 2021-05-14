@@ -69,7 +69,7 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
-        self.percent = 0
+        #self.percent = 0
         
         if len(self.frames_list) > 0:
             for i in self.frames_list:
@@ -78,13 +78,13 @@ class app:
 
     def create_new_video(self):
         frame_array = []
-        counter = 0
+        self.counter = 0
         dif = 0
         self.question = "yes"
         if len(self.frames_list) > 0:
             for i in range(len(self.frames_list)):
                 if self.canceled == False:
-                    counter+=1
+                    self.counter+=1
 
                     filename = self.frames_list[i]
                     img = cv.imread(filename)
@@ -94,7 +94,7 @@ class app:
                     for k in range(1):
                         frame_array.append(img)
 
-                    percent = counter*100/int(self.nframes)
+                    percent = self.counter*100/int(self.nframes)
                     self.prog_bar.step(percent-dif)
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
