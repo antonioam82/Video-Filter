@@ -168,7 +168,7 @@ class app:
                             
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
-                    if self.vid_name and self.canceled == False: #self.question == "yes"
+                    if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
