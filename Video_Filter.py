@@ -67,7 +67,6 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
-        #self.percent = 0
         
         if len(self.frames_list) > 0:
             for i in self.frames_list:
