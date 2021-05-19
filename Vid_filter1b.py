@@ -20,10 +20,8 @@ class app:
         self.currentDir.set(os.getcwd())
         self.filename = StringVar()
         self.file = None
-        self.canceled = False
         self.frames_list = []
         self.vid_name = None
-        #self.question = "yes"
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -158,7 +156,7 @@ class app:
                             self.counter+=1
                             name = 'frame'+str(self.counter)+'.png'
                             blur = cv.bilateralFilter(frame,9,75,75)################
-                            cv.imwrite(name,blur)##################################
+                            cv.imwrite(name,blur)################################
                             self.frames_list.append(name)
                 
                             self.percent = self.counter*100/int(self.nframes)
