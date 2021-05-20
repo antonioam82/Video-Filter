@@ -13,7 +13,7 @@ class app:
     def __init__(self):
         self.root = Tk()
         self.root.title("Video Filter")
-        self.root.geometry("905x246")
+        self.root.geometry("905x236")
         self.root.configure(bg="lavender")
 
         self.currentDir = StringVar()
