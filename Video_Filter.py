@@ -73,6 +73,13 @@ class app:
                 os.remove(i)
         self.frames_list = []
 
+    def check_path(self,p):
+        if " " in p:
+            messagebox.showwarning("INVALID PATH","No valid path provided (avoid white spaces in path).")
+            return None
+        else:
+            return p
+
     def create_new_video(self):
         frame_array = []
         self.counter = 0
@@ -130,7 +137,7 @@ class app:
             
     def filtering(self):
         if self.file:
-            directory = filedialog.askdirectory()
+            directory = self.check_path(filedialog.askdirectory())
             if directory:
                 try:
                     os.chdir(directory)
