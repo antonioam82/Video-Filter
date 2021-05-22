@@ -178,7 +178,7 @@ class app:
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
-                        if self.profile == "Constrained Baseline" and not 'VidAudioInfo.mp3' in os.listdir():####################################
+                        if self.profile == 'Constrained Baseline' and not 'VidAudioInfo.mp3' in os.listdir():####################################
                             os.rename('filteredVideo.mp4',self.vid_name)#########################################################################
                         else:
                             os.remove('filteredVideo.mp4')
