@@ -53,6 +53,7 @@ class app:
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
             self.height = (self.video_streams[0]['height'])
+            self.profile = (self.video_streams[0]['profile'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
             self.vidName = (self.file).split("/")[-1]
             self.filename.set(self.vidName)
@@ -177,7 +178,10 @@ class app:
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
-                        os.remove('filteredVideo.mp4')
+                        if self.profile == "Constrained Baseline" and not 'VidAudioInfo.mp3' in os.listdir():####################################
+                            os.rename('filteredVideo.mp4',self.vid_name)#########################################################################
+                        else:
+                            os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
