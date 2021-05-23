@@ -125,11 +125,9 @@ class app:
                 self.processLabel.configure(text="ADDING AUDIO...")
                 if 'VidAudioInfo.mp3' in os.listdir():
                     final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
-                    #os.remove('VidAudioInfo.mp3')
                     print('BOTH')
                 else:
                     final_video = movie('filteredVideo.mp4')
-                #os.remove('filteredVideo.mp4')
                 final_video.save(self.vid_name)
         
             for i in self.frames_list:
