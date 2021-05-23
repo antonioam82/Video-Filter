@@ -13,15 +13,17 @@ class app:
     def __init__(self):
         self.root = Tk()
         self.root.title("Video Filter")
-        self.root.geometry("905x236")
+        self.root.geometry("905x246")
         self.root.configure(bg="lavender")
 
         self.currentDir = StringVar()
         self.currentDir.set(os.getcwd())
         self.filename = StringVar()
         self.file = None
+        self.canceled = False
         self.frames_list = []
         self.vid_name = None
+        #self.question = "yes"
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -30,17 +32,19 @@ class app:
         self.btnStart = Button(self.root,text="START FILTERING",width=97,height=2,bg="light green",command=self.init_task)
         self.btnStart.place(x=8,y=77)
         Button(self.root,text="CANCEL",height=2,width=25,bg="light blue1",command=self.cancel).place(x=709,y=77)
-        Label(self.root,text="FRAME RATE:",bg="lavender").place(x=709,y=150)
+        Label(self.root,text="FRAME RATE:",bg="lavender").place(x=709,y=130)
         self.frLabel = Label(self.root,bg='black',width=14,fg="light green")
-        self.frLabel.place(x=790,y=150)
-        Label(self.root,text="N FRAMES:",bg="lavender").place(x=721,y=190)
+        self.frLabel.place(x=790,y=130)
+        Label(self.root,text="N FRAMES:",bg="lavender").place(x=721,y=170)
         self.nframesLabel = Label(self.root,bg='black',width=14,fg="light green")
-        self.nframesLabel.place(x=790,y=190)
+        self.nframesLabel.place(x=790,y=170)
         self.prog_bar = ttk.Progressbar(self.root)
         self.prog_bar.place(x=10,y=170,width=687)
         self.processLabel = Label(self.root,text="PROCESS",bg="lavender",width=97)
         self.processLabel.place(x=10,y=148)
-
+        self.filter_method = ttk.Combobox(master=self.root,width=27)
+        self.filter_method.place(x=710,y=210)
+        
         self.root.mainloop()
 
     def open_file(self):
@@ -53,7 +57,6 @@ class app:
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
             self.height = (self.video_streams[0]['height'])
-            self.profile = (self.video_streams[0]['profile'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
             self.vidName = (self.file).split("/")[-1]
             self.filename.set(self.vidName)
@@ -68,18 +71,12 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
+        #self.percent = 0
         
         if len(self.frames_list) > 0:
             for i in self.frames_list:
                 os.remove(i)
         self.frames_list = []
-
-    def check_path(self,p):
-        if " " in p:
-            messagebox.showwarning("INVALID PATH","No valid path provided (avoid white spaces in path).")
-            return None
-        else:
-            return p
 
     def create_new_video(self):
         frame_array = []
@@ -138,7 +135,7 @@ class app:
             
     def filtering(self):
         if self.file:
-            directory = self.check_path(filedialog.askdirectory())
+            directory = filedialog.askdirectory()
             if directory:
                 try:
                     os.chdir(directory)
@@ -162,7 +159,9 @@ class app:
                         if ret:
                             self.counter+=1
                             name = 'frame'+str(self.counter)+'.png'
-                            blur = cv.bilateralFilter(frame,9,75,75)################
+                            #blur = cv.bilateralFilter(frame,9,75,75)################
+                            edit = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+                            _, blur = cv.threshold(edit, 127, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
                             cv.imwrite(name,blur)################################
                             self.frames_list.append(name)
                 
@@ -178,10 +177,7 @@ class app:
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
-                        if self.profile == 'Constrained Baseline' and not 'VidAudioInfo.mp3' in os.listdir():####################################
-                            os.rename('filteredVideo.mp4',self.vid_name)#########################################################################
-                        else:
-                            os.remove('filteredVideo.mp4')
+                        os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
