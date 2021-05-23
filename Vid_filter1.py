@@ -32,10 +32,10 @@ class app:
         self.btnStart = Button(self.root,text="START FILTERING",width=97,height=2,bg="light green",command=self.init_task)
         self.btnStart.place(x=8,y=77)
         Button(self.root,text="CANCEL",height=2,width=25,bg="light blue1",command=self.cancel).place(x=709,y=77)
-        Label(self.root,text="FRAME RATE:",bg="lavender").place(x=709,y=130)
+        Label(self.root,text="FRAME RATE:",bg="lavender").place(x=710,y=130)
         self.frLabel = Label(self.root,bg='black',width=14,fg="light green")
         self.frLabel.place(x=790,y=130)
-        Label(self.root,text="N FRAMES:",bg="lavender").place(x=721,y=170)
+        Label(self.root,text="N FRAMES:",bg="lavender").place(x=720,y=170)
         self.nframesLabel = Label(self.root,bg='black',width=14,fg="light green")
         self.nframesLabel.place(x=790,y=170)
         self.prog_bar = ttk.Progressbar(self.root)
@@ -44,6 +44,8 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
+        self.filter_method["values"]=["Bilateral Filter","Gaussian Blurring","Median Blurring","Gray Scale"]
+        self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
 
