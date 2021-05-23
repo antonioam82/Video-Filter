@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Gaussian Blurring","Median Blurring","Gray Scale"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Gaussian Blurring","Median Blurring","Gray Scale"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -64,6 +64,14 @@ class app:
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
+
+    def aply_method(self,fr):
+        if self.filter_method.get() == "Bilateral Filter":
+            edit = cv.bilateralFilter(fr,9,75,75)
+        if self.filter_method.get() == "Blur":
+            edit = cv.blur(fr,(5,5))
+        return edit
+            
         
 
     def cancel(self):
@@ -104,7 +112,7 @@ class app:
                     dif=percent
 
             name,ex = os.path.splitext(self.vidName)
-            self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
+            self.vid_name = (name+'('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
@@ -161,10 +169,8 @@ class app:
                         if ret:
                             self.counter+=1
                             name = 'frame'+str(self.counter)+'.png'
-                            #blur = cv.bilateralFilter(frame,9,75,75)################
-                            edit = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-                            _, blur = cv.threshold(edit, 127, 255, cv.THRESH_BINARY_INV + cv.THRESH_OTSU)
-                            cv.imwrite(name,blur)################################
+                            edited_frame = self.aply_method(frame)
+                            cv.imwrite(name,edited_frame)################################
                             self.frames_list.append(name)
                 
                             self.percent = self.counter*100/int(self.nframes)
