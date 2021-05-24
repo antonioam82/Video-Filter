@@ -68,8 +68,10 @@ class app:
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
             edit = cv.bilateralFilter(fr,9,75,75)
-        if self.filter_method.get() == "Blur":
+        elif self.filter_method.get() == "Blur":
             edit = cv.blur(fr,(5,5))
+        elif self.filter_method.get() == "Gray Scale":
+            edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         return edit
             
         
