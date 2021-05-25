@@ -76,8 +76,6 @@ class app:
             edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         return edit
             
-        
-
     def cancel(self):
         self.canceled = True
         self.processLabel.configure(text="CANCELLED")
