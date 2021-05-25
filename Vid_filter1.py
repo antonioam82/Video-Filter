@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Gaussian Blurring","Median Blur","Gray Scale"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
