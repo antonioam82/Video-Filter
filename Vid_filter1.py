@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -74,6 +74,8 @@ class app:
             edit = cv.medianBlur(fr,5)
         elif self.filter_method.get() == "Gray Scale":
             edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
+        elif self.filter_method.get() == "fastNlMeansDenoisingColored":
+            edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         return edit
             
     def cancel(self):
