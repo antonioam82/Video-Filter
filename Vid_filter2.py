@@ -200,13 +200,7 @@ class app:
                 if self.vid_name and self.canceled == False and self.question == "yes":
                     messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
                     self.btnView.configure(state="normal")
-                #######################################################################################################################
-                '''index_=0
-                   for i in self.raw_data:
-                       index_+=1
-                        img = cv.imread(i)
-                        cv.imwrite('frame'+str(index_)+'.png',i)'''
-                ########################################################################################################################
+
                 if 'VidAudioInfo.mp3' in os.listdir():
                     os.remove('VidAudioInfo.mp3')
                 if 'filteredVideo.mp4' in os.listdir():
