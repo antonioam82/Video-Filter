@@ -20,7 +20,7 @@ class app:
         self.currentDir.set(os.getcwd())
         self.filename = StringVar()
         self.file = None
-        self.frames_list = []
+        self.frame_list = []
         self.vid_name = None
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
@@ -68,11 +68,7 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
-        
-        if len(self.frames_list) > 0:
-            for i in self.frames_list:
-                os.remove(i)
-        self.frames_list = []
+        self.frame_list = []
 
     def check_path(self,p):
         if " " in p:
@@ -86,24 +82,23 @@ class app:
         self.counter = 0
         dif = 0
         self.question = "yes"
-        if len(self.frames_list) > 0:
-            for i in range(len(self.frames_list)):
+        if len(self.frame_list) > 0:
+            for img in self.frame_list:
                 if self.canceled == False:
                     self.counter+=1
-
-                    filename = self.frames_list[i]
-                    img = cv.imread(filename)
                     height, width, layers = img.shape
                     size = (width,height)
 
                     for k in range(1):
                         frame_array.append(img)
 
+                    
                     percent = self.counter*100/int(self.nframes)
                     self.prog_bar.step(percent-dif)
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
-
+                    
+            #self.counter=0
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
@@ -113,7 +108,7 @@ class app:
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
-                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)#'mp4v'
+                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
                 print("CREATING VIDEO...")
                 print('FA:',len(frame_array))
                 self.processLabel.configure(text="FINALIZING VIDEO...")
@@ -130,9 +125,7 @@ class app:
                     final_video = movie('filteredVideo.mp4')
                 final_video.save(self.vid_name)
         
-            for i in self.frames_list:
-                os.remove(i)
-            self.frames_list = []
+            self.frame_list = []
             
     def filtering(self):
         if self.file:
@@ -160,9 +153,8 @@ class app:
                         if ret:
                             self.counter+=1
                             name = 'frame'+str(self.counter)+'.png'
-                            blur = cv.bilateralFilter(frame,9,75,75)################
-                            cv.imwrite(name,blur)################################
-                            self.frames_list.append(name)
+                            edited_frame = cv.bilateralFilter(frame,9,75,75)
+                            self.frame_list.append(edited_frame)
                 
                             self.percent = self.counter*100/int(self.nframes)
                             self.prog_bar.step(self.percent-dif)
@@ -176,8 +168,8 @@ class app:
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
-                        if self.profile == 'Constrained Baseline' and not 'VidAudioInfo.mp3' in os.listdir():####################################
-                            os.rename('filteredVideo.mp4',self.vid_name)#########################################################################
+                        if self.profile == 'Constrained Baseline' and not 'VidAudioInfo.mp3' in os.listdir():
+                            os.rename('filteredVideo.mp4',self.vid_name)
                         else:
                             os.remove('filteredVideo.mp4')
                 except Exception as e:
