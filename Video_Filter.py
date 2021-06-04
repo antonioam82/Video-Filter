@@ -98,7 +98,6 @@ class app:
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
                     
-            #self.counter=0
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
