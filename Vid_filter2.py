@@ -46,7 +46,7 @@ class app:
         self.filter_method.place(x=710,y=210)
         self.btnView = Button(self.root,text="VIEW RESULT",state="disabled",command=self.display_result)
         self.btnView.place(x=315,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","fastNlMeansDenoisingColored"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -75,8 +75,6 @@ class app:
             edit = cv.blur(fr,(5,5))
         elif self.filter_method.get() == "Median Blur":
             edit = cv.medianBlur(fr,5)
-        elif self.filter_method.get() == "Gray Scale":
-            edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         return edit
