@@ -52,7 +52,6 @@ class app:
             probe = ffmpeg.probe(self.file)
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
-            self.height = (self.video_streams[0]['height'])
             self.profile = (self.video_streams[0]['profile'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
             self.vidName = (self.file).split("/")[-1]
