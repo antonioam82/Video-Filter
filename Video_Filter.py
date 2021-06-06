@@ -128,12 +128,15 @@ class app:
             
     def filtering(self):
         if self.file:
+            #SELECCION DIRECTORIO DESTINO.
             directory = self.check_path(filedialog.askdirectory())
             if directory:
                 try:
+                    #CAMBIO DIRECTORIO/DESABILITA BOTONES "SEARCH" "START FILTERING".
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
+                    #EXTRAER AUDIO.
                     try:
                         self.processLabel.configure(text="GETTING AUDIO DATA...")
                         audio = AudioSegment.from_file(self.file)#
@@ -141,24 +144,28 @@ class app:
                     except:
                         pass
                     self.currentDir.set(os.getcwd())
+                    #VARIBLES PARA BARRA DE PROGRESO.
                     dif = 0
                     self.counter = 0
                     self.canceled = False
+                    #INICIO CAPTURA DE VIDEO.
                     self.cam = cv.VideoCapture(self.file)
                     ret = True
                     
                     while self.canceled == False and ret:
+                        #LECTURA Y PROCESADO DE CADA 'FRAME'.
                         ret,frame = self.cam.read()
                         if ret:
                             self.counter+=1
                             name = 'frame'+str(self.counter)+'.png'
-                            edited_frame = cv.bilateralFilter(frame,9,75,75)
-                            self.frame_list.append(edited_frame)
-                
-                            self.percent = self.counter*100/int(self.nframes)
-                            self.prog_bar.step(self.percent-dif)
-                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(self.percent)))
-                            dif=self.percent
+                            edited_frame = cv.bilateralFilter(frame,9,75,75)#APLICACIÓN DE FILTRO AL 'FRAME'.
+                            self.frame_list.append(edited_frame)#AÑADIR INFORMACIÓN DE 'FRAME' FILTRADO
+
+                            #AVANCE BARRA DE PROGRESO,
+                            percent = self.counter*100/int(self.nframes)
+                            self.prog_bar.step(percent-dif)
+                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(percent)))
+                            dif=percent
                             
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
