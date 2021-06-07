@@ -30,7 +30,8 @@ class app:
         self.btnSearch.place(x=709,y=25)
         self.btnStart = Button(self.root,text="START FILTERING",width=97,height=2,bg="light green",command=self.init_task)
         self.btnStart.place(x=8,y=77)
-        Button(self.root,text="CANCEL",height=2,width=25,bg="light blue1",command=self.cancel).place(x=709,y=77)
+        self.btnCancel = Button(self.root,text="CANCEL",height=2,width=25,bg="light blue1",command=self.cancel)
+        self.btnCancel.place(x=709,y=77)
         Label(self.root,text="FRAME RATE:",bg="lavender").place(x=709,y=150)
         self.frLabel = Label(self.root,bg='black',width=14,fg="light green")
         self.frLabel.place(x=790,y=150)
@@ -66,7 +67,7 @@ class app:
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
-        self.prog_bar.step(0)
+        self.prog_bar.step(100)
         self.counter = 0
         self.frame_list = []
 
@@ -78,32 +79,32 @@ class app:
             return p
 
     def create_new_video(self):
+        self.btnCancel.configure(state='disabled')
         frame_array = []
         self.counter = 0
         dif = 0
         self.question = "yes"
-        if len(self.frame_list) > 0:
+        if len(self.frame_list) > 0 and self.canceled == False:
             for img in self.frame_list:
-                if self.canceled == False:
-                    self.counter+=1
-                    height, width, layers = img.shape
-                    size = (width,height)
+                self.counter+=1
+                height, width, layers = img.shape
+                size = (width,height)
 
-                    for k in range(1):
-                        frame_array.append(img)
+                for k in range(1):
+                    frame_array.append(img)
 
                     
-                    percent = self.counter*100/int(self.nframes)
-                    self.prog_bar.step(percent-dif)
-                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                    dif=percent
+                percent = self.counter*100/int(self.nframes)
+                self.prog_bar.step(percent-dif)
+                self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
+                dif=percent
                     
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
-            if self.vid_name in os.listdir() and self.canceled == False:
+            if self.vid_name in os.listdir():
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
-            if self.question == "yes" and self.canceled == False:
+            if self.question == "yes":
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
@@ -182,6 +183,7 @@ class app:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
+                self.btnCancel.configure(state='normal')
                 
     def init_task(self):
         t = threading.Thread(target=self.filtering)
