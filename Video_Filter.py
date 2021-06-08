@@ -131,6 +131,7 @@ class app:
             self.frame_list = []
             
     def filtering(self):
+        self.prog_bar.stop()
         if self.file:
             #SELECCION DIRECTORIO DESTINO.
             directory = self.check_path(filedialog.askdirectory())
