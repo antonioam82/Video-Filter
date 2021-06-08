@@ -54,21 +54,19 @@ class app:
             probe = ffmpeg.probe(self.file)
             self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
             self.nframes = (self.video_streams[0]['nb_frames'])
-            #self.profile = (self.video_streams[0]['profile'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
             self.vidName = (self.file).split("/")[-1]
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
         
-
+    #CANCELAR PROCESO.
     def cancel(self):
         self.canceled = True
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
-        self.prog_bar.step(100)
-        self.counter = 0
+        self.prog_bar.stop()
         self.frame_list = []
 
     def check_path(self,p):
@@ -79,44 +77,49 @@ class app:
             return p
 
     def create_new_video(self):
-        self.btnCancel.configure(state='disabled')
+        #VARIABLES.
         frame_array = []
         self.counter = 0
         dif = 0
         self.question = "yes"
-        if len(self.frame_list) > 0 and self.canceled == False:
+        if len(self.frame_list) > 0:
+            #CONCATENAR 'FRAMES'
             for img in self.frame_list:
-                self.counter+=1
-                height, width, layers = img.shape
-                size = (width,height)
+                if self.canceled == False:
+                    self.counter+=1
+                    height, width, layers = img.shape
+                    size = (width,height)
 
-                for k in range(1):
-                    frame_array.append(img)
+                    for k in range(1):
+                        frame_array.append(img)
 
-                    
-                percent = self.counter*100/int(self.nframes)
-                self.prog_bar.step(percent-dif)
-                self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                dif=percent
+                    #AVANCE BARRA DE PROGRESO.    
+                    percent = self.counter*100/int(self.nframes)
+                    self.prog_bar.step(percent-dif)
+                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
+                    dif=percent
                     
             name,ex = os.path.splitext(self.vidName)
             self.vid_name = (name+'(filtered)'+'.mp4').replace(" ","_")
-            if self.vid_name in os.listdir():
+            if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
 
-            if self.question == "yes":
+            if self.question == "yes" and self.canceled == False:
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
                 out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
                 print("CREATING VIDEO...")
                 print('FA:',len(frame_array))
+
+                #FINALIZAR VIDEO.
                 self.processLabel.configure(text="FINALIZING VIDEO...")
                 for i in range(len(frame_array)):
                     out.write(frame_array[i])
 
                 out.release()
 
+                #AÑADIR AUDIO.
                 self.processLabel.configure(text="ADDING AUDIO...")
                 if 'VidAudioInfo.mp3' in os.listdir():
                     final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
@@ -183,7 +186,6 @@ class app:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
-                self.btnCancel.configure(state='normal')
                 
     def init_task(self):
         t = threading.Thread(target=self.filtering)
