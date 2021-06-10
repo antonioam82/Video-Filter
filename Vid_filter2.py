@@ -14,7 +14,7 @@ class app:
     def __init__(self):
         self.root = Tk()
         self.root.title("Video Filter")
-        self.root.geometry("905x246")
+        self.root.geometry("905x240")#246
         self.root.configure(bg="lavender")
 
         self.currentDir = StringVar()
@@ -44,9 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.btnView = Button(self.root,text="VIEW RESULT",state="disabled",command=self.display_result)
-        self.btnView.place(x=315,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","fastNlMeansDenoisingColored"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","filter2D","fastNlMeansDenoisingColored"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -73,6 +71,8 @@ class app:
             edit = cv.bilateralFilter(fr,9,75,75)
         elif self.filter_method.get() == "Blur":
             edit = cv.blur(fr,(5,5))
+        elif self.filter_method.get() == "filter2D":
+            edit = cv.filter2D(fr,-1,np.array([[-1,-1,-1],[-1,9,-1],[-1,-1,-1]]))
         elif self.filter_method.get() == "Median Blur":
             edit = cv.medianBlur(fr,5)
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
@@ -84,42 +84,32 @@ class app:
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
-        self.prog_bar.step(0)
-        self.counter = 0
-        #self.percent = 0
-        
-        if len(self.frames_list) > 0:
-            for i in self.frames_list:
-                os.remove(i)
+        self.prog_bar.stop()
         self.frames_list = []
 
     def display_result(self):
         print("eeee")
         try:
-            os.system(r'C:\Users\Antonio\Documents\Nueva_carpeta\frames\videooo.mp4')
+            print("hiola")
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
 
     def create_new_video(self):
         frame_array = []
-        self.counter = 0
+        counter = 0
         dif = 0
         self.question = "yes"
         if len(self.frames_list) > 0:
-            for i in self.frames_list:
+            for img in self.frames_list:
                 if self.canceled == False:
-                    self.counter+=1
-
-                    #filename = self.frames_list[i]
-                    img = i
-                    height, width, layers = img.shape
+                    counter+=1
+                    height, width, layers  = img.shape
                     size = (width,height)
-                    print(type(self.size))
 
                     for k in range(1):
                         frame_array.append(img)
 
-                    percent = self.counter*100/int(self.nframes)
+                    percent = counter*100/int(self.nframes)
                     self.prog_bar.step(percent-dif)
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
@@ -145,68 +135,64 @@ class app:
                 self.processLabel.configure(text="ADDING AUDIO...")
                 if 'VidAudioInfo.mp3' in os.listdir():
                     final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
-                    #os.remove('VidAudioInfo.mp3')
                     print('BOTH')
                 else:
                     final_video = movie('filteredVideo.mp4')
-                #os.remove('filteredVideo.mp4')
                 final_video.save(self.vid_name)
-        
-            '''for i in self.frames_list:
-                os.remove(i)'''
+
             self.frames_list = []
             
     def filtering(self):
-        #self.raw_data = []#############################################################################################################
         if self.file:
             directory = filedialog.askdirectory()
             if directory:
-                #try:
-                os.chdir(directory)
-                self.btnStart.configure(state='disabled')
-                self.btnSearch.configure(state='disabled')
                 try:
-                    self.processLabel.configure(text="GETTING AUDIO DATA...")
-                    audio = AudioSegment.from_file(self.file)#
-                    audio.export("VidAudioInfo.mp3",format="mp3")
-                except:
-                    pass
-                self.currentDir.set(os.getcwd())
-                dif = 0
-                self.counter = 0
-                self.canceled = False
-                self.cam = cv.VideoCapture(self.file)
-                ret = True
+                    print(os.getcwd())
+                    os.chdir(directory)
+                    self.btnStart.configure(state='disabled')
+                    self.btnSearch.configure(state='disabled')
+                    try:
+                        self.processLabel.configure(text="GETTING AUDIO DATA...")
+                        audio = AudioSegment.from_file(self.file)#
+                        audio.export("VidAudioInfo.mp3",format="mp3")
+                    except:
+                        pass
+                    self.currentDir.set(os.getcwd())
+                    dif = 0
+                    counter = 0
+                    self.canceled = False
+                    self.cam = cv.VideoCapture(self.file)
+                    ret = True
                     
-                while self.canceled == False and ret:
-                    ret,frame = self.cam.read()
-                    if ret:
-                        self.counter+=1
-                        name = 'frame'+str(self.counter)+'.png'
-                        edited_frame = self.aply_method(frame)
-                        #self.raw_data.append(edited_frame)
-                        #cv.imwrite(name,edited_frame)
-                        self.frames_list.append(edited_frame)
+                    while self.canceled == False and ret:
+                        ret,frame = self.cam.read()
+                        if ret:
+                            counter+=1
+                            name = 'frame'+str(counter)+'.png'
+                            edited_frame = self.aply_method(frame)
+                            self.frames_list.append(edited_frame)
                 
-                        self.percent = self.counter*100/int(self.nframes)
-                        self.prog_bar.step(self.percent-dif)
-                        self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(self.percent)))
-                        dif=self.percent
+                            percent = counter*100/int(self.nframes)
+                            self.prog_bar.step(percent-dif)
+                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
+                            dif=percent
                             
-                self.create_new_video()
-                self.processLabel.configure(text="PROCESS: ENDED")
-                if self.vid_name and self.canceled == False and self.question == "yes":
-                    messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                    self.btnView.configure(state="normal")
+                    self.create_new_video()
+                    self.processLabel.configure(text="PROCESS: ENDED")
+                    if self.vid_name and self.canceled == False and self.question == "yes":
+                        messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
 
-                if 'VidAudioInfo.mp3' in os.listdir():
-                    os.remove('VidAudioInfo.mp3')
-                if 'filteredVideo.mp4' in os.listdir():
-                    os.remove('filteredVideo.mp4')
-                #except Exception as e:
-                    #messagebox.showwarning("UNEXPECTED ERROR",str(e))
-            self.btnStart.configure(state='normal')
-            self.btnSearch.configure(state='normal')
+                    if 'VidAudioInfo.mp3' in os.listdir():
+                        os.remove('VidAudioInfo.mp3')
+                    if 'filteredVideo.mp4' in os.listdir():
+                        if not self.vid_name in os.listdir():
+                            os.rename('filteredVideo.mp4',self.vid_name)
+                        else:
+                            os.remove('filteredVideo.mp4')
+                except Exception as e:
+                    messagebox.showwarning("UNEXPECTED ERROR",str(e))
+                self.btnStart.configure(state='normal')
+                self.btnSearch.configure(state='normal')
                 
     def init_task(self):
         t = threading.Thread(target=self.filtering)
