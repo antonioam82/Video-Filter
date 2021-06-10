@@ -87,13 +87,6 @@ class app:
         self.prog_bar.stop()
         self.frames_list = []
 
-    def display_result(self):
-        print("eeee")
-        try:
-            print("hiola")
-        except Exception as e:
-            messagebox.showwarning("UNEXPECTED ERROR",str(e))
-
     def create_new_video(self):
         frame_array = []
         counter = 0
