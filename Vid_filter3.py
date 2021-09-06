@@ -7,14 +7,13 @@ import numpy as np
 import threading
 from mhmovie.code import *
 from pydub import AudioSegment
-import tempfile
 import os
 
 class app:
     def __init__(self):
         self.root = Tk()
         self.root.title("Video Filter")
-        self.root.geometry("905x240")#246
+        self.root.geometry("905x246")
         self.root.configure(bg="lavender")
 
         self.currentDir = StringVar()
@@ -24,6 +23,7 @@ class app:
         self.canceled = False
         self.frames_list = []
         self.vid_name = None
+        #self.question = "yes"
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","filter2D","fastNlMeansDenoisingColored","Gray Scale"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored","Filter2D"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -60,7 +60,6 @@ class app:
             self.nframes = (self.video_streams[0]['nb_frames'])
             self.height = (self.video_streams[0]['height'])
             self.fr = (self.video_streams[0]['avg_frame_rate'])
-            self.size = (self.video_streams[0]['height'])
             self.vidName = (self.file).split("/")[-1]
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
@@ -71,14 +70,14 @@ class app:
             edit = cv.bilateralFilter(fr,9,75,75)
         elif self.filter_method.get() == "Blur":
             edit = cv.blur(fr,(5,5))
-        elif self.filter_method.get() == "filter2D":
-            edit = cv.filter2D(fr,-1,np.array([[-1,-1,-1],[-1,9,-1],[-1,-1,-1]]))
         elif self.filter_method.get() == "Median Blur":
             edit = cv.medianBlur(fr,5)
+        elif self.filter_method.get() == "Gray Scale":
+            edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
-        elif self.filter_method.get() == "Gray Scale":
-            edit = cv.cvtColor(fr,cv.COLOR_RGB2GRAY)
+        elif self.filter_method.get() == "Filter2D":
+            edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/25)
         return edit
             
     def cancel(self):
@@ -86,33 +85,33 @@ class app:
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
-        self.prog_bar.stop()
+        self.prog_bar.step(0)
+        self.counter = 0
+        #self.percent = 0
+        
+        if len(self.frames_list) > 0:
+            for i in self.frames_list:
+                os.remove(i)
         self.frames_list = []
-
-    def display_result(self):
-        try:
-            print("hiola")
-        except Exception as e:
-            messagebox.showwarning("UNEXPECTED ERROR",str(e))
 
     def create_new_video(self):
         frame_array = []
-        counter = 0
+        self.counter = 0
         dif = 0
         self.question = "yes"
         if len(self.frames_list) > 0:
-            for img in self.frames_list:
+            for i in self.frames_list:
                 if self.canceled == False:
-                    counter+=1
-                    #height, width, layers  = img.shape
-                    height = img.shape[0]
-                    width = img.shape[1]
+                    self.counter+=1
+                    #height, width  = i.shape #layers
+                    height = i.shape[0]
+                    width = i.shape[1]
                     size = (width,height)
 
                     for k in range(1):
-                        frame_array.append(img)
+                        frame_array.append(i)
 
-                    percent = counter*100/int(self.nframes)
+                    percent = self.counter*100/int(self.nframes)
                     self.prog_bar.step(percent-dif)
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
@@ -126,12 +125,12 @@ class app:
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
-                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'mp4v'), frame_rate, size)#'mp4v'
+                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
                 print("CREATING VIDEO...")
                 print('FA:',len(frame_array))
                 self.processLabel.configure(text="FINALIZING VIDEO...")
-                for i in range(len(frame_array)):
-                    out.write(frame_array[i])
+                for e in range(len(frame_array)):
+                    out.write(frame_array[e])
 
                 out.release()
 
@@ -150,7 +149,6 @@ class app:
             directory = filedialog.askdirectory()
             if directory:
                 try:
-                    print(os.getcwd())
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
@@ -162,7 +160,7 @@ class app:
                         pass
                     self.currentDir.set(os.getcwd())
                     dif = 0
-                    counter = 0
+                    self.counter = 0
                     self.canceled = False
                     self.cam = cv.VideoCapture(self.file)
                     ret = True
@@ -170,21 +168,21 @@ class app:
                     while self.canceled == False and ret:
                         ret,frame = self.cam.read()
                         if ret:
-                            counter+=1
-                            name = 'frame'+str(counter)+'.png'
+                            self.counter+=1
+                            #name = 'frame'+str(self.counter)+'.png'
                             edited_frame = self.aply_method(frame)
+                            #cv.imwrite(name,edited_frame)################################
                             self.frames_list.append(edited_frame)
                 
-                            percent = counter*100/int(self.nframes)
-                            self.prog_bar.step(percent-dif)
-                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((counter),int(percent)))
-                            dif=percent
+                            self.percent = self.counter*100/int(self.nframes)
+                            self.prog_bar.step(self.percent-dif)
+                            self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(self.percent)))
+                            dif=self.percent
                             
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-
                     if 'VidAudioInfo.mp3' in os.listdir():
                         os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
