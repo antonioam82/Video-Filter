@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored","Filter2D"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored","Filter2D","pyrDown"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -77,7 +77,9 @@ class app:
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         elif self.filter_method.get() == "Filter2D":
-            edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/25)
+            edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)
+        elif self.filter_method.get() == "pyrDown":
+            edit = cv.pyrDown(fr)
         return edit
             
     def cancel(self):
