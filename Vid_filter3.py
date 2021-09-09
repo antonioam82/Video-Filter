@@ -137,12 +137,14 @@ class app:
                 out.release()
 
                 self.processLabel.configure(text="ADDING AUDIO...")
+                vid = ffmpeg.input('filteredVideo.mp4')
+                audi = ffmpeg.input('VidAudioInfo.mp3')
                 if 'VidAudioInfo.mp3' in os.listdir():
-                    final_video = movie('filteredVideo.mp4') + music('VidAudioInfo.mp3')
+                    ffmpeg.concat(vid,audi,v=1,a=1).output(self.vid_name).run()
                     print('BOTH')
                 else:
-                    final_video = movie('filteredVideo.mp4')
-                final_video.save(self.vid_name)
+                    ffmpeg.output(vid,self.vid_name).run()
+                #final_video.save(self.vid_name)
 
             self.frames_list = []
             
