@@ -5,8 +5,6 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
-#import dis
-#from mhmovie.code import *
 from pydub import AudioSegment
 import os
 
