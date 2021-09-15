@@ -5,7 +5,8 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
-from mhmovie.code import *
+#import dis
+#from mhmovie.code import *
 from pydub import AudioSegment
 import os
 
@@ -44,7 +45,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","Gray Scale","fastNlMeansDenoisingColored","Filter2D","pyrDown"]
+        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","fastNlMeansDenoisingColored","Filter2D","pyrDown","watermark"]
         self.filter_method.set("Bilateral Filter")
         
         self.root.mainloop()
@@ -64,6 +65,18 @@ class app:
             self.filename.set(self.vidName)
             self.frLabel.configure(text=self.fr)
             self.nframesLabel.configure(text=self.nframes)
+            
+    def wtrmrk(self,b,frame):
+        cv.putText(b,
+                    text='watermark',
+                    org=(frame.shape[1]//6, frame.shape[0]//2),
+                    fontFace=cv.FONT_HERSHEY_SIMPLEX,
+                    fontScale= 2,color=(163,163,163),
+                    thickness=11,
+                    lineType=cv.LINE_4)
+        blend = cv.addWeighted(src1=frame,alpha=1,src2=b,beta=0.5, gamma = 0)
+        return blend
+        
 
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -72,14 +85,15 @@ class app:
             edit = cv.blur(fr,(5,5))
         elif self.filter_method.get() == "Median Blur":
             edit = cv.medianBlur(fr,5)
-        elif self.filter_method.get() == "Gray Scale":
-            edit = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         elif self.filter_method.get() == "Filter2D":
             edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)
         elif self.filter_method.get() == "pyrDown":
             edit = cv.pyrDown(fr)
+        elif self.filter_method.get() == "watermark":
+            blank = np.zeros(shape=(fr.shape[0],fr.shape[1],3), dtype=np.uint8)
+            edit = self.wtrmrk(blank,fr)
         return edit
             
     def cancel(self):
