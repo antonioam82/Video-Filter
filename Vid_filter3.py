@@ -22,7 +22,6 @@ class app:
         self.canceled = False
         self.frames_list = []
         self.vid_name = None
-        #self.question = "yes"
         
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -101,11 +100,7 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
-        #self.percent = 0
         
-        if len(self.frames_list) > 0:
-            for i in self.frames_list:
-                os.remove(i)
         self.frames_list = []
 
     def create_new_video(self):
@@ -185,9 +180,7 @@ class app:
                         ret,frame = self.cam.read()
                         if ret:
                             self.counter+=1
-                            #name = 'frame'+str(self.counter)+'.png'
                             edited_frame = self.aply_method(frame)
-                            #cv.imwrite(name,edited_frame)################################
                             self.frames_list.append(edited_frame)
                 
                             self.percent = self.counter*100/int(self.nframes)
