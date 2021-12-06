@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog, messagebox
@@ -5,7 +7,6 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
-#from mhmovie.code import *
 from pydub import AudioSegment
 import os
  
@@ -23,7 +24,6 @@ class app:
         self.canceled = False
         self.frames_list = []
         self.vid_name = None
-        #self.question = "yes"
  
         Entry(self.root,textvariable=self.currentDir,width=158).place(x=0,y=0)
         Entry(self.root,textvariable=self.filename,font=('arial',23,'bold'),width=40).place(x=10,y=25)
@@ -44,7 +44,7 @@ class app:
         self.processLabel.place(x=10,y=148)
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
-        self.filter_method["values"]=["Bilateral Filter","Blur","Median Blur","fastNlMeansDenoisingColored","Filter2D","pyrDown"]
+        self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored","Filter2D","pyrDown"]
         self.filter_method.set("Bilateral Filter")
  
         self.root.mainloop()
@@ -68,6 +68,8 @@ class app:
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
             edit = cv.bilateralFilter(fr,9,75,75)
+        elif self.filter_method.get() == "Mean Shift Filtering":
+            edit = cv.pyrMeanShiftFiltering(fr,10,50)
         elif self.filter_method.get() == "Blur":
             edit = cv.blur(fr,(5,5))
         elif self.filter_method.get() == "Median Blur":
@@ -87,7 +89,7 @@ class app:
         self.btnSearch.configure(state='normal')
         self.prog_bar.step(0)
         self.counter = 0
-
+ 
         self.frames_list = []
  
     def create_new_video(self):
