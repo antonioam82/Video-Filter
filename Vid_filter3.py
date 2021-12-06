@@ -190,6 +190,8 @@ class app:
                             os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
+                    if "VidAudioInfo.mp3" in os.listdir():
+                        os.remove("VidAudioInfo.mp3")
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
  
