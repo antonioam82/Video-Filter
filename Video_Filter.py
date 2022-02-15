@@ -70,7 +70,6 @@ class app:
             self.nframesLabel.configure(text=self.nframes)
  
     def aply_method(self,fr):
-        
         if self.filter_method.get() == "Bilateral Filter":
             edit = cv.bilateralFilter(fr,9,75,75)
         elif self.filter_method.get() == "Mean Shift Filtering":
