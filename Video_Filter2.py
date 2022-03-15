@@ -142,12 +142,12 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
-                audi = ffmpeg.input('VidAudioInfo.mp3')
-                if 'VidAudioInfo.mp3' in os.listdir():
-                    ffmpeg.concat(vid,audi,v=1,a=1).output(self.vid_name).run()
-                    print('BOTH')
-                else:
-                    ffmpeg.output(vid,self.vid_name).run()
+                #audi = ffmpeg.input('VidAudioInfo.mp3')
+                #if 'VidAudioInfo.mp3' in os.listdir():
+                    #ffmpeg.concat(vid,audi,v=1,a=1).output(self.vid_name).run()
+                    #print('BOTH')
+                #else:
+                ffmpeg.output(self.audio,vid,self.vid_name).run()
                 #final_video.save(self.vid_name)
  
             self.frames_list = []
@@ -161,9 +161,11 @@ class app:
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
                     try:
-                        self.processLabel.configure(text="GETTING AUDIO DATA...")
-                        audio = AudioSegment.from_file(self.file)#
-                        audio.export("VidAudioInfo.mp3",format="mp3")
+                        input = ffmpeg.input(self.file)
+                        self.audio = input.audio
+                        #self.processLabel.configure(text="GETTING AUDIO DATA...")
+                        #audio = AudioSegment.from_file(self.file)#
+                        #audio.export("VidAudioInfo.mp3",format="mp3")
                     except:
                         pass
                     self.currentDir.set(os.getcwd())
