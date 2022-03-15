@@ -191,8 +191,8 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                    if 'VidAudioInfo.mp3' in os.listdir():
-                        os.remove('VidAudioInfo.mp3')
+                    #if 'VidAudioInfo.mp3' in os.listdir():
+                        #os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
                         if not self.vid_name in os.listdir():
                             os.rename('filteredVideo.mp4',self.vid_name)
@@ -200,8 +200,8 @@ class app:
                             os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
-                    if "VidAudioInfo.mp3" in os.listdir():
-                        os.remove("VidAudioInfo.mp3")
+                    #if "VidAudioInfo.mp3" in os.listdir():
+                        #os.remove("VidAudioInfo.mp3")
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
  
