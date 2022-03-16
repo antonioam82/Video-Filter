@@ -54,20 +54,23 @@ class app:
         self.root.mainloop()
  
     def open_file(self):
-        self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
+        try:
+            self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-        if self.dir:
-            self.file = self.dir
+            if self.dir:
+                self.file = self.dir
  
-            probe = ffmpeg.probe(self.file)
-            self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
-            self.nframes = (self.video_streams[0]['nb_frames'])
-            self.height = (self.video_streams[0]['height'])
-            self.fr = (self.video_streams[0]['avg_frame_rate'])
-            self.vidName = (self.file).split("/")[-1]
-            self.filename.set(self.vidName)
-            self.frLabel.configure(text=self.fr)
-            self.nframesLabel.configure(text=self.nframes)
+                probe = ffmpeg.probe(self.file)
+                self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+                self.nframes = (self.video_streams[0]['nb_frames'])
+                self.height = (self.video_streams[0]['height'])
+                self.fr = (self.video_streams[0]['avg_frame_rate'])
+                self.vidName = (self.file).split("/")[-1]
+                self.filename.set(self.vidName)
+                self.frLabel.configure(text=self.fr)
+                self.nframesLabel.configure(text=self.nframes)
+        except Exception as e:
+            messagebox.showwarning("UNEXPECTED ERROR",str(e))
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
