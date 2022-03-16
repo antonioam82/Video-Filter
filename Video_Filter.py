@@ -54,20 +54,25 @@ class app:
         self.root.mainloop()
  
     def open_file(self):
-        self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
-                        filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-        if self.dir:
-            self.file = self.dir
+        try:
+            self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
+                       filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
+            if self.dir:
+                self.file = self.dir
  
-            probe = ffmpeg.probe(self.file)
-            self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
-            self.nframes = (self.video_streams[0]['nb_frames'])
-            self.height = (self.video_streams[0]['height'])
-            self.fr = (self.video_streams[0]['avg_frame_rate'])
-            self.vidName = (self.file).split("/")[-1]
-            self.filename.set(self.vidName)
-            self.frLabel.configure(text=self.fr)
-            self.nframesLabel.configure(text=self.nframes)
+                probe = ffmpeg.probe(self.file)
+                self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+                self.nframes = (self.video_streams[0]['nb_frames'])
+                self.height = (self.video_streams[0]['height'])
+                self.fr = (self.video_streams[0]['avg_frame_rate'])
+                self.vidName = (self.file).split("/")[-1]
+                self.filename.set(self.vidName)
+                self.frLabel.configure(text=self.fr)
+                self.nframesLabel.configure(text=self.nframes)
+                
+        except Exception as e:
+            messagebox.showwarning("UNEXPECTED ERROR",str(e))
+            
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -82,8 +87,6 @@ class app:
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         elif self.filter_method.get() == "Filter2D Sharpening":
             edit = cv.filter2D(fr,-1,self.kernel)
-        #elif self.filter_method.get() == "Filter2D Bright":
-            #edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)
         elif self.filter_method.get() == "pyrDown":
             edit = cv.pyrDown(fr)
         elif self.filter_method.get() == "resize (128x720)":
@@ -148,7 +151,6 @@ class app:
                     print('BOTH')
                 else:
                     ffmpeg.output(vid,self.vid_name).run()
-                #final_video.save(self.vid_name)
  
             self.frames_list = []
  
