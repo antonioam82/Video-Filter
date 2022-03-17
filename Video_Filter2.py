@@ -57,9 +57,7 @@ class app:
         try:
             self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-
-            #self.dir.encode("ascii","replace")
-            #self.BMP(self.dir)
+      
             if self.dir:
                 self.file = self.dir
  
@@ -74,9 +72,6 @@ class app:
                 self.nframesLabel.configure(text=self.nframes)
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
-
-    #def BMP(self,s):
-        #return "".join((i if ord(i) < 10000 else '\ufffd' for i in s))
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
