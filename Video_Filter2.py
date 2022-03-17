@@ -57,6 +57,9 @@ class app:
         try:
             self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
+
+            #self.dir.encode("ascii","replace")
+            #self.BMP(self.dir)
             if self.dir:
                 self.file = self.dir
  
@@ -71,6 +74,9 @@ class app:
                 self.nframesLabel.configure(text=self.nframes)
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
+
+    #def BMP(self,s):
+        #return "".join((i if ord(i) < 10000 else '\ufffd' for i in s))
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -150,7 +156,10 @@ class app:
                     #ffmpeg.concat(vid,audi,v=1,a=1).output(self.vid_name).run()
                     #print('BOTH')
                 #else:
-                ffmpeg.output(self.audio,vid,self.vid_name).run()
+                try:
+                    ffmpeg.output(self.audio,vid,self.vid_name).run()
+                except:
+                    ffmpeg.output(vid,self.vid_name).run()
                 #final_video.save(self.vid_name)
  
             self.frames_list = []
@@ -164,9 +173,10 @@ class app:
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
                     try:
+                        self.processLabel.configure(text="GETTING AUDIO DATA...")
                         input = ffmpeg.input(self.file)
                         self.audio = input.audio
-                        #self.processLabel.configure(text="GETTING AUDIO DATA...")
+                        print("THE AUDIO: ",self.audio)
                         #audio = AudioSegment.from_file(self.file)#
                         #audio.export("VidAudioInfo.mp3",format="mp3")
                     except:
