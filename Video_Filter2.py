@@ -57,7 +57,7 @@ class app:
         try:
             self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-      
+
             if self.dir:
                 self.file = self.dir
  
@@ -113,7 +113,6 @@ class app:
             for i in self.frames_list:
                 if self.canceled == False:
                     self.counter+=1
-                    #height, width  = i.shape #layers
                     height = i.shape[0]
                     width = i.shape[1]
                     size = (width,height)
@@ -146,16 +145,11 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
-                #audi = ffmpeg.input('VidAudioInfo.mp3')
-                #if 'VidAudioInfo.mp3' in os.listdir():
-                    #ffmpeg.concat(vid,audi,v=1,a=1).output(self.vid_name).run()
-                    #print('BOTH')
-                #else:
+
                 try:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()
                 except:
                     ffmpeg.output(vid,self.vid_name).run()
-                #final_video.save(self.vid_name)
  
             self.frames_list = []
  
@@ -172,8 +166,6 @@ class app:
                         input = ffmpeg.input(self.file)
                         self.audio = input.audio
                         print("THE AUDIO: ",self.audio)
-                        #audio = AudioSegment.from_file(self.file)#
-                        #audio.export("VidAudioInfo.mp3",format="mp3")
                     except:
                         pass
                     self.currentDir.set(os.getcwd())
@@ -199,8 +191,6 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                    #if 'VidAudioInfo.mp3' in os.listdir():
-                        #os.remove('VidAudioInfo.mp3')
                     if 'filteredVideo.mp4' in os.listdir():
                         if not self.vid_name in os.listdir():
                             os.rename('filteredVideo.mp4',self.vid_name)
@@ -208,8 +198,6 @@ class app:
                             os.remove('filteredVideo.mp4')
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
-                    #if "VidAudioInfo.mp3" in os.listdir():
-                        #os.remove("VidAudioInfo.mp3")
                 self.btnStart.configure(state='normal')
                 self.btnSearch.configure(state='normal')
  
