@@ -48,7 +48,7 @@ class app:
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
         self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored",
-                                      "Filter2D Sharpening","pyrDown","resize (128x720)"]#"Filter2D (Bright)"
+                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)"]#"Filter2D (Bright)"
         self.filter_method.set("Bilateral Filter")
  
         self.root.mainloop()
@@ -86,8 +86,8 @@ class app:
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         elif self.filter_method.get() == "Filter2D Sharpening":
             edit = cv.filter2D(fr,-1,self.kernel)
-        #elif self.filter_method.get() == "Filter2D Bright":
-            #edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)
+        elif self.filter_method.get() == "Filter2D Bright":#
+            edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)#
         elif self.filter_method.get() == "pyrDown":
             edit = cv.pyrDown(fr)
         elif self.filter_method.get() == "resize (128x720)":
