@@ -7,7 +7,7 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
-from pydub import AudioSegment
+#from pydub import AudioSegment
 import os
  
 class app:
@@ -92,6 +92,7 @@ class app:
             edit = cv.pyrDown(fr)
         elif self.filter_method.get() == "resize (128x720)":
             edit = cv.resize(fr, (1280, 720))
+        print(type(edit))
         return edit
  
     def cancel(self):
@@ -147,9 +148,10 @@ class app:
                 vid = ffmpeg.input('filteredVideo.mp4')
 
                 try:
-                    ffmpeg.output(self.audio,vid,self.vid_name).run()
+                    ffmpeg.output(self.audio,vid,self.vid_name).run()#vid
+                    print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                 except:
-                    ffmpeg.output(vid,self.vid_name).run()
+                    ffmpeg.output(vid,self.vid_name).run()#vid
  
             self.frames_list = []
  
@@ -165,7 +167,6 @@ class app:
                         self.processLabel.configure(text="GETTING AUDIO DATA...")
                         input = ffmpeg.input(self.file)
                         self.audio = input.audio
-                        print("THE AUDIO: ",self.audio)
                     except:
                         pass
                     self.currentDir.set(os.getcwd())
