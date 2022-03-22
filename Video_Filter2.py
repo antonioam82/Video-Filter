@@ -149,7 +149,6 @@ class app:
 
                 try:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()#vid
-                    print("nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn")
                 except:
                     ffmpeg.output(vid,self.vid_name).run()#vid
  
