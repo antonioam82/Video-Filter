@@ -7,7 +7,6 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
-#from pydub import AudioSegment
 import os
  
 class app:
@@ -92,7 +91,6 @@ class app:
             edit = cv.pyrDown(fr)
         elif self.filter_method.get() == "resize (128x720)":
             edit = cv.resize(fr, (1280, 720))
-        print(type(edit))
         return edit
  
     def cancel(self):
@@ -127,7 +125,8 @@ class app:
                     dif=percent
  
             name,ex = os.path.splitext(self.vidName)
-            self.vid_name = (name+'('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
+            #self.vid_name = (name+' ('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
+            self.vid_name = (name+' ('+self.filter_method.get()+')'+'.mp4')
             if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
  
@@ -146,7 +145,7 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
-
+                
                 try:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()#vid
                 except:
