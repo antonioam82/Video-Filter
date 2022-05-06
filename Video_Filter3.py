@@ -90,7 +90,11 @@ class app:
         elif self.filter_method.get() == "pyrDown":
             edit = cv.pyrDown(fr)
         elif self.filter_method.get() == "resize (128x720)":
-            edit = cv.resize(fr, (1280, 720))
+            w = int(fr.shape[1] * 150 / 100)
+            h = int(fr.shape[0] * 150 / 100)
+            dsize = (w,h)
+            edit = cv.resize(fr, (dsize))
+            #edit = cv.resize(fr, (1280, 720))
         return edit
  
     def cancel(self):
