@@ -47,8 +47,7 @@ class app:
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
         self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored",
-                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize 1280x720","resize 200%"]#"Filter2D (Bright)"
-        
+                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)"]#"Filter2D (Bright)"
         self.filter_method.set("Bilateral Filter")
  
         self.root.mainloop()
@@ -81,7 +80,7 @@ class app:
         elif self.filter_method.get() == "Blur":
             edit = cv.blur(fr,(5,5))
         elif self.filter_method.get() == "Median Blur":
-            edit = cv.medianBlur(fr,5)
+            edit = cv.medianBlur(fr,3)
         elif self.filter_method.get() == "fastNlMeansDenoisingColored":
             edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
         elif self.filter_method.get() == "Filter2D Sharpening":
@@ -90,14 +89,8 @@ class app:
             edit = cv.filter2D(fr,-1,np.ones((5,5),np.float32)/12)#
         elif self.filter_method.get() == "pyrDown":
             edit = cv.pyrDown(fr)
-        elif self.filter_method.get() == "resize 1280x720":
+        elif self.filter_method.get() == "resize (128x720)":
             edit = cv.resize(fr, (1280, 720))
-        elif self.filter_method.get() == "resize 200%":
-            w = int(fr.shape[1] * 200 / 100)
-            h = int(fr.shape[0] * 200 / 100)
-            dsize = (w,h)
-            print(dsize)
-            edit = cv.resize(fr, (dsize))
         return edit
  
     def cancel(self):
@@ -132,7 +125,7 @@ class app:
                     dif=percent
  
             name,ex = os.path.splitext(self.vidName)
-            self.vid_name = (name+' ('+self.filter_method.get()+')'+'.mp4')
+            self.vid_name = (name+'('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
  
@@ -151,7 +144,7 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
-                
+
                 try:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()#vid
                 except:
