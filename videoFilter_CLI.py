@@ -14,4 +14,11 @@ def main():
     parser.add_argument('-dest','--destination',type=str,help='Destination video')
     parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
     
+    args=parser.parse_args()
+    app(args)
 
+def app(args):
+    print("OK")
+
+if __name__=="__main__":
+    main()
