@@ -18,14 +18,17 @@ def main():
     app(args)
 
 def app(args):
-    probe = ffmpeg.probe(args.source)
-    video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
-    n_frames = (video_streams[0]['nb_frames'])
-    height = (video_streams[0]['height'])
-    frame_rate = (video_streams[0]['avg_frame_rate'])
-    print(f'Number of frames: {n_frames}')
-    print(f'Frame Rate: {frame_rate}')
-    print(f'Height: {height}')
+    if args.source in os.listdir():
+        probe = ffmpeg.probe(args.source)
+        video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+        n_frames = (video_streams[0]['nb_frames'])
+        height = (video_streams[0]['height'])
+        frame_rate = (video_streams[0]['avg_frame_rate'])
+        print(f'Number of frames: {n_frames}')
+        print(f'Frame Rate: {frame_rate}')
+        print(f'Height: {height}')
+    else:
+        print(f"ERROR: File '{args.source}' not found.")
 
     
 if __name__=="__main__":
