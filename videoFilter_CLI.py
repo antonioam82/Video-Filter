@@ -22,7 +22,9 @@ def app(args):
     video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
     n_frames = (video_streams[0]['nb_frames'])
     height = (video_streams[0]['height'])
+    frame_rate = (video_streams[0]['avg_frame_rate'])
     print(f'Number of frames: {n_frames}')
+    print(f'Frame Rate: {frame_rate}')
     print(f'Height: {height}')
 
     
