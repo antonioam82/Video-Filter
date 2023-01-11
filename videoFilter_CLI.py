@@ -18,7 +18,13 @@ def main():
     app(args)
 
 def app(args):
-    print("OK")
+    probe = ffmpeg.probe(args.source)
+    video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+    n_frames = (video_streams[0]['nb_frames'])
+    height = (video_streams[0]['height'])
+    print(f'Number of frames: {n_frames}')
+    print(f'Height: {height}')
 
+    
 if __name__=="__main__":
     main()
