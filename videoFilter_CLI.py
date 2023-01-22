@@ -17,6 +17,14 @@ def main():
     args=parser.parse_args()
     app(args)
 
+def frames_editor(source):
+    try:
+        ffmp_input = ffmpeg.input(source)
+        audio = ffmp_input.audio
+        print("OK")
+    except Exception as e:
+        print(str(e))
+    
 def app(args):
     if args.source in os.listdir():
         probe = ffmpeg.probe(args.source)
@@ -28,6 +36,7 @@ def app(args):
         print(f'Number of frames: {n_frames}')
         print(f'Frame Rate: {frame_rate}')
         print(f'Height: {height}')
+        frames_editor(args.source)
     else:
         print(f"ERROR: File '{args.source}' not found.")
 
