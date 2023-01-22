@@ -32,10 +32,12 @@ def app(args):
         n_frames = (video_streams[0]['nb_frames'])
         height = (video_streams[0]['height'])
         frame_rate = (video_streams[0]['avg_frame_rate'])
+        print("\n******************INFO******************")
         print(f'SOURCE FILE: {args.source}')
         print(f'Number of frames: {n_frames}')
         print(f'Frame Rate: {frame_rate}')
         print(f'Height: {height}')
+        print("****************************************")
         frames_editor(args.source)
     else:
         print(f"ERROR: File '{args.source}' not found.")
@@ -43,3 +45,4 @@ def app(args):
     
 if __name__=="__main__":
     main()
+
