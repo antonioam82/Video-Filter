@@ -5,6 +5,7 @@ import ffmpeg
 import numpy as np
 import threading
 import os
+import tqdm
 import argparse
 
 def main():
@@ -45,4 +46,3 @@ def app(args):
     
 if __name__=="__main__":
     main()
-
