@@ -19,10 +19,18 @@ def main():
     app(args)
 
 def frames_editor(source):
+    
     try:
-        ffmp_input = ffmpeg.input(source)
-        audio = ffmp_input.audio
-        print("OK")
+        #ffmp_input = ffmpeg.input(source)
+        cam = cv.VideoCapture(source)
+        #audio = ffmp_input.audio
+        ret = True
+        while ret:
+            ret,frame = cam.read()
+            if ret:
+                print("OK")
+        print("END")
+        
     except Exception as e:
         print(str(e))
     
