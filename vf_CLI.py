@@ -22,7 +22,6 @@ def main():
 
 def frames_editor(source):
     frame_list = []
-    print(type(n_frames))
     try:
         #ffmp_input = ffmpeg.input(source)
         cam = cv.VideoCapture(source)
@@ -35,7 +34,7 @@ def frames_editor(source):
                 frame_list.append(frame)
                 pbar.update(ret)
         pbar.close()
-        print("END: ",len(frame_list))
+        print("END")
         
     except Exception as e:
         print(str(e))
@@ -61,3 +60,4 @@ def app(args):
     
 if __name__=="__main__":
     main()
+
