@@ -5,8 +5,10 @@ import ffmpeg
 import numpy as np
 import threading
 import os
-import tqdm
+from tqdm import tqdm
 import argparse
+
+n_frames = 0
 
 def main():
 
@@ -19,22 +21,26 @@ def main():
     app(args)
 
 def frames_editor(source):
-    
+    frame_list = []
+    print(type(n_frames))
     try:
         #ffmp_input = ffmpeg.input(source)
         cam = cv.VideoCapture(source)
         #audio = ffmp_input.audio
+        pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
         ret = True
         while ret:
             ret,frame = cam.read()
             if ret:
-                print("OK")
-        print("END")
+                frame_list.append(frame)
+                pbar.update(ret)
+        print("END: ",len(frame_list))
         
     except Exception as e:
         print(str(e))
     
 def app(args):
+    global n_frames
     if args.source in os.listdir():
         probe = ffmpeg.probe(args.source)
         video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
