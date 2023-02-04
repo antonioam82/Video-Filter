@@ -34,6 +34,7 @@ def frames_editor(source):
             if ret:
                 frame_list.append(frame)
                 pbar.update(ret)
+        pbar.close()
         print("END: ",len(frame_list))
         
     except Exception as e:
