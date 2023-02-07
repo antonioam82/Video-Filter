@@ -5,6 +5,7 @@ import ffmpeg
 import numpy as np
 import threading
 import os
+from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
 
@@ -37,9 +38,12 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
 def frames_editor(filterm,source):
     frame_list = []
     try:
-        #ffmp_input = ffmpeg.input(source)
         cam = cv.VideoCapture(source)
+        #ffmp_input = ffmpeg.input(source)
         #audio = ffmp_input.audio
+        #audio.export("video_audio.mp3",format="mp3")
+        audio = AudioSegment.from_file(source)
+        audio.export("VidAudioInfo.mp3",format="mp3")
         pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
         ret = True
         while ret:
@@ -61,12 +65,13 @@ def app(args):
         n_frames = (video_streams[0]['nb_frames'])
         height = (video_streams[0]['height'])
         frame_rate = (video_streams[0]['avg_frame_rate'])
+        codec_type = (video_streams[0]['avg_frame_rate'])
         print("\n******************INFO******************")
         print(f'SOURCE FILE: {args.source}')
         print(f'Number of frames: {n_frames}')
         print(f'Frame Rate: {frame_rate}')
         print(f'Height: {height}')
-        print("****************************************")
+        print("****************************************\n")
         frames_editor(args.filter,args.source)
     else:
         print(f"ERROR: File '{args.source}' not found.")
@@ -74,3 +79,4 @@ def app(args):
     
 if __name__=="__main__":
     main()
+
