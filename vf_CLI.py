@@ -30,7 +30,7 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
     elif filterm == 'denoisingCol':
         edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
     elif filterm == 'pyrdown':
-        cv.pyrDown(fr)
+        edit = cv.pyrDown(fr)
         
     return edit
 
