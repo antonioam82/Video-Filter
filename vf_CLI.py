@@ -20,7 +20,12 @@ def main():
     args=parser.parse_args()
     app(args)
 
-def frames_editor(source):
+def aply_method(filterm,fr):
+    if filterm == 'bilateral':
+        edit = cv.bilateralFilter(fr,9,75,75)
+    return edit
+
+def frames_editor(filterm,source):
     frame_list = []
     try:
         #ffmp_input = ffmpeg.input(source)
@@ -31,7 +36,7 @@ def frames_editor(source):
         while ret:
             ret,frame = cam.read()
             if ret:
-                frame_list.append(frame)
+                frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
         pbar.close()
         print("END")
@@ -53,11 +58,10 @@ def app(args):
         print(f'Frame Rate: {frame_rate}')
         print(f'Height: {height}')
         print("****************************************")
-        frames_editor(args.source)
+        frames_editor(args.filter,args.source)
     else:
         print(f"ERROR: File '{args.source}' not found.")
 
     
 if __name__=="__main__":
     main()
-
