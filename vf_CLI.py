@@ -20,9 +20,18 @@ def main():
     args=parser.parse_args()
     app(args)
 
-def aply_method(filterm,fr):
+def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'
     if filterm == 'bilateral':
         edit = cv.bilateralFilter(fr,9,75,75)
+    elif filterm == 'blur':
+        edit = cv.blur(fr, (5,5))
+    elif filterm == 'median':
+        edit = cv.medianBlur(fr,5)
+    elif filterm == 'denoisingCol':
+        edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
+    elif filterm == 'pyrdown':
+        cv.pyrDown(fr)
+        
     return edit
 
 def frames_editor(filterm,source):
