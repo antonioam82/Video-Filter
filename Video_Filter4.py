@@ -56,7 +56,7 @@ class app:
         try:
             self.dir = filedialog.askopenfilename(initialdir="/",title="SELECT FILE",
                         filetypes=(("mp4 files","*.mp4"),("avi files","*.avi"),("gif files","*.gif")))
-
+ 
             if self.dir:
                 self.file = self.dir
  
@@ -104,7 +104,7 @@ class app:
         self.counter = 0
  
         self.frames_list = []
-
+ 
     def sketching(self,fr):
         gray = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
         inverted = 255-gray
@@ -155,7 +155,7 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
-
+ 
                 try:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()#vid
                 except:
@@ -195,6 +195,7 @@ class app:
                             self.prog_bar.step(self.percent-dif)
                             self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(self.percent)))
                             dif=self.percent
+                    self.cam.release()
  
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
