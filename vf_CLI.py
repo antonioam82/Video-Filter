@@ -40,25 +40,25 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
 
 def frames_editor(filterm,source):
     frame_list = []
-    #try:
-    cam = cv.VideoCapture(source)
-    #ffmp_input = ffmpeg.input(source)
-    #audio = ffmp_input.audio
-    #audio.export("video_audio.mp3",format="mp3")
-    #audio = AudioSegment.from_file(source)
-    #audio.export("VidAudioInfo.mp3",format="mp3")
-    pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
-    ret = True
-    while ret:
-        ret,frame = cam.read()
-        if ret:
-            frame_list.append(aply_method(filterm,frame))
-            pbar.update(ret)
-    pbar.close()
-    print("END")
+    try:
+        cam = cv.VideoCapture(source)
+        #ffmp_input = ffmpeg.input(source)
+        #audio = ffmp_input.audio
+        #audio.export("video_audio.mp3",format="mp3")
+        #audio = AudioSegment.from_file(source)
+        #audio.export("VidAudioInfo.mp3",format="mp3")
+        pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
+        ret = True
+        while ret:
+            ret,frame = cam.read()
+            if ret:
+                frame_list.append(aply_method(filterm,frame))
+                pbar.update(ret)
+        pbar.close()
+        print("END")
         
-    '''except Exception as e:
-        print(str(e))'''
+    except Exception as e:
+        print(str(e))
     
 def app(args):
     global n_frames
