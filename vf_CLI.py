@@ -50,7 +50,7 @@ def create_video():
 
         for k in range(1):
             frame_array.append(i)
-    print("END"
+    print("END")
     
 
 def frames_editor(filterm,source):
@@ -70,7 +70,7 @@ def frames_editor(filterm,source):
                 frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
         pbar.close()
-        #print("END")
+        print("END")
         
     except Exception as e:
         print(str(e))
@@ -82,12 +82,14 @@ def app(args):
         video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
         n_frames = (video_streams[0]['nb_frames'])
         height = (video_streams[0]['height'])
+        width = (video_streams[0]['width'])
         frame_rate = (video_streams[0]['avg_frame_rate'])
         codec_type = (video_streams[0]['avg_frame_rate'])
         print(Fore.YELLOW+"\n******************INFO******************")
         print(f'SOURCE FILE: {args.source}')
         print(f'Number of frames: {n_frames}')
         print(f'Frame Rate: {frame_rate}')
+        print(f'Width: {width}')
         print(f'Height: {height}')
         print("****************************************\n"+Fore.RESET)
         frames_editor(args.filter,args.source)
@@ -97,3 +99,4 @@ def app(args):
     
 if __name__=="__main__":
     main()
+
