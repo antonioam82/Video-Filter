@@ -42,7 +42,7 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
 def create_video():
     frame_array = []
     print("\n###########################")
-    pbar = tqdm(desc="CREATING VIDEO: ",total=int(n_frames))
+    #pbar = tqdm(desc="CREATING VIDEO: ",total=int(n_frames))
     for i in frame_list:
         height = i.shape[0]
         width = i.shape[1]
@@ -70,7 +70,7 @@ def frames_editor(filterm,source):
                 frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
         pbar.close()
-        print("END")
+        #print("END")
         
     except Exception as e:
         print(str(e))
@@ -93,10 +93,10 @@ def app(args):
         print(f'Height: {height}')
         print("****************************************\n"+Fore.RESET)
         frames_editor(args.filter,args.source)
+        create_video()
     else:
         print(f"ERROR: File '{args.source}' not found.")
 
     
 if __name__=="__main__":
     main()
-
