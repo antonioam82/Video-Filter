@@ -11,6 +11,7 @@ from tqdm import tqdm
 import argparse
 
 n_frames = 0
+frame_list = []
 init()
 
 
@@ -38,8 +39,22 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
         
     return edit
 
+def create_video():
+    frame_array = []
+    print("\n###########################")
+    pbar = tqdm(desc="CREATING VIDEO: ",total=int(n_frames))
+    for i in frame_list:
+        height = i.shape[0]
+        width = i.shape[1]
+        size = (width,height)
+
+        for k in range(1):
+            frame_array.append(i)
+    print("END"
+    
+
 def frames_editor(filterm,source):
-    frame_list = []
+    global frame_list
     try:
         cam = cv.VideoCapture(source)
         #ffmp_input = ffmpeg.input(source)
@@ -55,7 +70,7 @@ def frames_editor(filterm,source):
                 frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
         pbar.close()
-        print("END")
+        #print("END")
         
     except Exception as e:
         print(str(e))
