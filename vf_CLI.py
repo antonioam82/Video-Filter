@@ -41,17 +41,16 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
 
 def create_video():
     frame_array = []
-    print("\n###########################")
-    #pbar = tqdm(desc="CREATING VIDEO: ",total=int(n_frames))
-    for i in frame_list:
-        height = i.shape[0]
-        width = i.shape[1]
+    print("\nCREATING VIDEO...")
+    for i in tqdm(frame_list):
+        height = i.shape[0] 
+        width = i.shape[1]       
         size = (width,height)
 
         for k in range(1):
             frame_array.append(i)
-    print("END")
     
+    print("END: ",len(frame_array))   
 
 def frames_editor(filterm,source):
     global frame_list
@@ -62,7 +61,9 @@ def frames_editor(filterm,source):
         #audio.export("video_audio.mp3",format="mp3")
         #audio = AudioSegment.from_file(source)
         #audio.export("VidAudioInfo.mp3",format="mp3")
-        pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
+        #pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
+        print("PROCESSING FRAMES...")
+        pbar = tqdm(total=int(n_frames))
         ret = True
         while ret:
             ret,frame = cam.read()
