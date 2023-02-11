@@ -4,6 +4,7 @@ import cv2 as cv
 import ffmpeg
 import numpy as np
 import threading
+import time
 import os
 from colorama import init, Fore
 from pydub import AudioSegment
@@ -49,6 +50,7 @@ def create_video():
 
         for k in range(1):
             frame_array.append(i)
+        #time.sleep(0.00001)
     
     print("END: ",len(frame_array))   
 
