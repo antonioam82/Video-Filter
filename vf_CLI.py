@@ -3,7 +3,7 @@
 import cv2 as cv
 import ffmpeg
 import numpy as np
-import threading
+#import threading
 import time
 import os
 from colorama import init, Fore
@@ -14,17 +14,19 @@ import argparse
 n_frames = 0
 frame_list = []
 frame_rate = ""
+vid_name = ""
 init()
 
 
 def main():
-
+    global vid_name
     parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Video filter on CLI")
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
-    parser.add_argument('-dest','--destination',type=str,help='Destination video')
+    parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
-    
+
     args=parser.parse_args()
+    vid_name = args.destination
     app(args)
 
 def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'
@@ -53,7 +55,7 @@ def create_video():
             frame_array.append(i)
         time.sleep(0.00001)
     print("CREATING...")
-    out = cv.VideoWriter('NEWfilteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
+    out = cv.VideoWriter(vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
     for i in range(len(frame_array)):
         out.write(frame_array[i])
     out.release()
