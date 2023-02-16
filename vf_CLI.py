@@ -15,8 +15,8 @@ n_frames = 0
 frame_list = []
 frame_rate = ""
 vid_name = ""
-init()
 
+init()
 
 def main():
     global vid_name
@@ -54,12 +54,13 @@ def create_video():
         for k in range(1):
             frame_array.append(i)
         time.sleep(0.00001)
-    print("CREATING...")
+        
     out = cv.VideoWriter(vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
     for i in range(len(frame_array)):
         out.write(frame_array[i])
     out.release()
-    print("END: ",len(frame_array))   
+    
+    print(f"\nSuccessfully created video '{vid_name}'")   
 
 def frames_editor(filterm,source):
     global frame_list
@@ -80,7 +81,6 @@ def frames_editor(filterm,source):
                 frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
         pbar.close()
-        #print("END")
         
     except Exception as e:
         print(str(e))
