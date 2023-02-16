@@ -13,6 +13,7 @@ import argparse
 
 n_frames = 0
 frame_list = []
+frame_rate = ""
 init()
 
 
@@ -50,8 +51,12 @@ def create_video():
 
         for k in range(1):
             frame_array.append(i)
-        #time.sleep(0.00001)
-    
+        time.sleep(0.00001)
+    print("CREATING...")
+    out = cv.VideoWriter('NEWfilteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
+    for i in range(len(frame_array)):
+        out.write(frame_array[i])
+    out.release()
     print("END: ",len(frame_array))   
 
 def frames_editor(filterm,source):
@@ -79,7 +84,7 @@ def frames_editor(filterm,source):
         print(str(e))
     
 def app(args):
-    global n_frames
+    global n_frames, frame_rate
     if args.source in os.listdir():
         probe = ffmpeg.probe(args.source)
         video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
@@ -88,13 +93,13 @@ def app(args):
         width = (video_streams[0]['width'])
         frame_rate = (video_streams[0]['avg_frame_rate'])
         codec_type = (video_streams[0]['avg_frame_rate'])
-        print(Fore.YELLOW+"\n******************INFO******************")
+        print(Fore.YELLOW+"\n******************VIDEO INFO******************")
         print(f'SOURCE FILE: {args.source}')
         print(f'Number of frames: {n_frames}')
         print(f'Frame Rate: {frame_rate}')
         print(f'Width: {width}')
         print(f'Height: {height}')
-        print("****************************************\n"+Fore.RESET)
+        print("**********************************************\n"+Fore.RESET)
         frames_editor(args.filter,args.source)
         create_video()
     else:
