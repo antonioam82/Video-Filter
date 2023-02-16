@@ -6,7 +6,7 @@ import numpy as np
 #import threading
 import time
 import os
-from colorama import init, Fore
+from colorama import init, Fore, Style
 from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
@@ -46,21 +46,25 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
 def create_video():
     frame_array = []
     print("\nCREATING VIDEO...")
-    for i in tqdm(frame_list):
-        height = i.shape[0] 
-        width = i.shape[1]       
-        size = (width,height)
+    try:
+        print(d)
+        for i in tqdm(frame_list):
+            height = i.shape[0] 
+            width = i.shape[1]       
+            size = (width,height)
 
-        for k in range(1):
-            frame_array.append(i)
-        time.sleep(0.00001)
+            for k in range(1):
+                frame_array.append(i)
+            time.sleep(0.00001)
         
-    out = cv.VideoWriter(vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
-    for i in range(len(frame_array)):
-        out.write(frame_array[i])
-    out.release()
+        out = cv.VideoWriter(vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
+        for i in range(len(frame_array)):
+            out.write(frame_array[i])
+        out.release()
     
-    print(f"\nSuccessfully created video '{vid_name}'")   
+        print(f"\nSuccessfully created video '{vid_name}'")
+    except Exception as e:
+        print(Fore.RED+Style.BRIGHT+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def frames_editor(filterm,source):
     global frame_list
@@ -107,6 +111,6 @@ def app(args):
     else:
         print(f"ERROR: File '{args.source}' not found.")
 
-    
 if __name__=="__main__":
     main()
+
