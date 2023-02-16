@@ -47,7 +47,6 @@ def create_video():
     frame_array = []
     print("\nCREATING VIDEO...")
     try:
-        print(d)
         for i in tqdm(frame_list):
             height = i.shape[0] 
             width = i.shape[1]       
