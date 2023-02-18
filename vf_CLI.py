@@ -15,6 +15,7 @@ n_frames = 0
 frame_list = []
 frame_rate = ""
 vid_name = ""
+audio = ""
 
 init()
 
@@ -56,25 +57,29 @@ def create_video():
                 frame_array.append(i)
             time.sleep(0.00001)
         
-        out = cv.VideoWriter(vid_name,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
+        out = cv.VideoWriter("provVid.mp4",cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
         for i in range(len(frame_array)):
             out.write(frame_array[i])
         out.release()
-    
+        vid = ffmpeg.input("provVid.mp4")
+
+        try:
+            ffmpeg.output(audio,vid,vid_name).run()#vid
+        except:
+            ffmpeg.output(vid,vid_name).run()#vid'''
+        os.remove('provVid.mp4')
+        
         print(f"\nSuccessfully created video '{vid_name}'")
     except Exception as e:
         print(Fore.RED+Style.BRIGHT+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def frames_editor(filterm,source):
-    global frame_list
+    global frame_list, audio
     try:
         cam = cv.VideoCapture(source)
-        #ffmp_input = ffmpeg.input(source)
-        #audio = ffmp_input.audio
-        #audio.export("video_audio.mp3",format="mp3")
-        #audio = AudioSegment.from_file(source)
-        #audio.export("VidAudioInfo.mp3",format="mp3")
-        #pbar = tqdm(desc="PROCESSING FRAMES: ",total=int(n_frames))
+        ffmp_input = ffmpeg.input(source)
+        audio = ffmp_input.audio
+        
         print("PROCESSING FRAMES...")
         pbar = tqdm(total=int(n_frames))
         ret = True
@@ -83,6 +88,7 @@ def frames_editor(filterm,source):
             if ret:
                 frame_list.append(aply_method(filterm,frame))
                 pbar.update(ret)
+        cam.release()
         pbar.close()
         
     except Exception as e:
