@@ -67,7 +67,9 @@ def create_video():
             ffmpeg.output(audio,vid,vid_name).run()#vid
         except:
             ffmpeg.output(vid,vid_name).run()#vid'''
-        os.remove('provVid.mp4')
+            
+        if 'provVid.mp4' in os.listdir():
+            os.remove('provVid.mp4')
         
         print(f"\nSuccessfully created video '{vid_name}'")
     except Exception as e:
