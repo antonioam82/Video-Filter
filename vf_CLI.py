@@ -25,7 +25,8 @@ def main():
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
-    parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
+    parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','sharp','blur','median',
+                                                                                'denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
 
     args=parser.parse_args()
     vid_name = args.destination
@@ -42,6 +43,8 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
         edit = cv.fastNlMeansDenoisingColored(fr,None,20,10,7,21)
     elif filterm == 'pyrdown':
         edit = cv.pyrDown(fr)
+    elif filterm == 'sharp':
+        edit = cv.filter2D(fr,-1,np.array([[0,-1,0],[-1,5,-1],[0,-1,0]]))
         
     return edit
 
