@@ -24,6 +24,7 @@ def main():
     parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Video filter on CLI")
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
+    parser.add_argument('-d','--demo',action='store_true',help='test video')
     parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
 
     args=parser.parse_args()
@@ -44,7 +45,21 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
         
     return edit
 
-def create_video():
+def make_comp(args):
+    print("\nCREATING SPLIT SCREEN VIDEO...")
+    from moviepy.editor import VideoFileClip, clips_array
+    
+    vid1 = VideoFileClip(args.source).subclip(0, 3)
+    vid2 = VideoFileClip(args.destination).subclip(0, 3)
+
+    comb = clips_array([[vid1],
+                        [vid2]])
+    comb.write_videofile("test_video.mp4")
+    vid1.close()
+    vid2.close()
+    
+
+def create_video(args):
     frame_array = []
     print("\nCREATING VIDEO...")
     try:
@@ -67,6 +82,9 @@ def create_video():
             ffmpeg.output(audio,vid,vid_name).run()#vid
         except:
             ffmpeg.output(vid,vid_name).run()#vid'''
+
+        if args.demo:
+            make_comp(args)
             
         if 'provVid.mp4' in os.listdir():
             os.remove('provVid.mp4')
@@ -114,7 +132,7 @@ def app(args):
         print(f'Height: {height}')
         print("**********************************************\n"+Fore.RESET)
         frames_editor(args.filter,args.source)
-        create_video()
+        create_video(args)
     else:
         print(f"ERROR: File '{args.source}' not found.")
 
