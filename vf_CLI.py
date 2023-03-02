@@ -64,7 +64,6 @@ def make_comp(args):
 
 def create_video(args):
     frame_array = []
-    done = True
     print("\nCREATING VIDEO...")
     try:
         for i in tqdm(frame_list):
@@ -84,20 +83,21 @@ def create_video(args):
 
         try:
             ffmpeg.output(audio,vid,vid_name).run()#vid
+            print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
+            if args.demo:
+                make_comp(args)
         except:
             try:
                 ffmpeg.output(vid,vid_name).run()#vid'''
+                print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
+                if args.demo:
+                    make_comp(args)
             except Exception as e:
-                done = False
                 print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
-
-        if args.demo and done == True:
-            make_comp(args)
-            
+                
         if 'provVid.mp4' in os.listdir():
             os.remove('provVid.mp4')
-        
-        print(f"\nSuccessfully created video '{vid_name}'")
+            
     except Exception as e:
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
