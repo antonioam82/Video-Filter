@@ -64,6 +64,7 @@ def make_comp(args):
 
 def create_video(args):
     frame_array = []
+    done = True
     print("\nCREATING VIDEO...")
     try:
         for i in tqdm(frame_list):
@@ -84,9 +85,13 @@ def create_video(args):
         try:
             ffmpeg.output(audio,vid,vid_name).run()#vid
         except:
-            ffmpeg.output(vid,vid_name).run()#vid'''
+            try:
+                ffmpeg.output(vid,vid_name).run()#vid'''
+            except Exception as e:
+                done = False
+                print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
-        if args.demo:
+        if args.demo and done == True:
             make_comp(args)
             
         if 'provVid.mp4' in os.listdir():
@@ -94,7 +99,7 @@ def create_video(args):
         
         print(f"\nSuccessfully created video '{vid_name}'")
     except Exception as e:
-        print(Fore.RED+Style.BRIGHT+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
+        print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def frames_editor(filterm,source):
     global frame_list, audio
@@ -137,7 +142,7 @@ def app(args):
         frames_editor(args.filter,args.source)
         create_video(args)
     else:
-        print(f"ERROR: File '{args.source}' not found.")
+        print(Fore.RED+Style.DIM+f"\nERROR: File '{args.source}' not found."+Fore.RESET+Style.RESET_ALL)
 
 if __name__=="__main__":
     main()
