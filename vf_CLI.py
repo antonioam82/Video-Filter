@@ -68,7 +68,6 @@ def sketching(frame):
     inverted = 255-gray
     blurred = cv.GaussianBlur(inverted, (21,21),0)
     invertedblur=255-blurred
-    print(vcvc)
     pencil = cv.divide(gray,invertedblur,scale=256.0)
     result = cv.cvtColor(pencil,cv.COLOR_GRAY2BGR)
 
@@ -88,12 +87,14 @@ def create_video(args):
             for k in range(1):
                 frame_array.append(i)
             time.sleep(0.00001)
-        
-        out = cv.VideoWriter("provVid.mp4",cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
+
+        Pname, ex = os.path.splitext(vid_name)
+        Pfile = Pname+"_.mp4"
+        out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
         for i in range(len(frame_array)):
             out.write(frame_array[i])
         out.release()
-        vid = ffmpeg.input("provVid.mp4")
+        vid = ffmpeg.input(Pfile)
 
         try:
             ffmpeg.output(audio,vid,vid_name).run()#vid
@@ -109,8 +110,9 @@ def create_video(args):
             except Exception as e:
                 print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
                 
-        if 'provVid.mp4' in os.listdir():
-            os.remove('provVid.mp4')
+        if Pfile in os.listdir():
+            os.remove(Pfile)
+            print("REMOVED {}".format(Pfile))
             
     except Exception as e:
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
