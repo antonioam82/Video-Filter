@@ -26,7 +26,7 @@ def main():
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
     parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','sharp','blur','median',
-                                                                                'denoisingCol','2d','pyrdown','sketched','mean'],help='Filter method')
+                                                                                'denoisingCol','2d','pyrdown','pencil','mean'],help='Filter method')
 
     args=parser.parse_args()
     vid_name = args.destination
@@ -45,7 +45,8 @@ def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','p
         edit = cv.pyrDown(fr)
     elif filterm == 'sharp':
         edit = cv.filter2D(fr,-1,np.array([[0,-1,0],[-1,5,-1],[0,-1,0]]))
-        
+    elif filterm == 'pencil':
+        edit = sketching(fr)
     return edit
 
 def make_comp(args):
@@ -60,6 +61,15 @@ def make_comp(args):
     comb.write_videofile("test_video.mp4")
     vid1.close()
     vid2.close()
+
+def sketching(frame):
+    gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
+    inverted = 255-gray
+    blurred = cv.GaussianBlur(inverted, (21,21),0)
+    invertedblur=255-blurred
+    pencil = cv.divide(gray,invertedblur,scale=256.0)
+    result = cv.cvtColor(pencil,cv.COLOR_GRAY2BGR)
+    return result
     
 
 def create_video(args):
