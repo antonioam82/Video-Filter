@@ -16,6 +16,7 @@ frame_list = []
 frame_rate = ""
 vid_name = ""
 audio = ""
+check = True
 
 init()
 
@@ -67,9 +68,12 @@ def sketching(frame):
     inverted = 255-gray
     blurred = cv.GaussianBlur(inverted, (21,21),0)
     invertedblur=255-blurred
+    print(vcvc)
     pencil = cv.divide(gray,invertedblur,scale=256.0)
     result = cv.cvtColor(pencil,cv.COLOR_GRAY2BGR)
+
     return result
+    
     
 
 def create_video(args):
@@ -112,7 +116,7 @@ def create_video(args):
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def frames_editor(filterm,source):
-    global frame_list, audio
+    global frame_list, audio, check
     try:
         cam = cv.VideoCapture(source)
         ffmp_input = ffmpeg.input(source)
@@ -130,7 +134,8 @@ def frames_editor(filterm,source):
         pbar.close()
         
     except Exception as e:
-        print(str(e))
+        check = False
+        print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
     
 def app(args):
     global n_frames, frame_rate
@@ -150,7 +155,8 @@ def app(args):
         print(f'Height: {height}')
         print("**********************************************\n"+Fore.RESET)
         frames_editor(args.filter,args.source)
-        create_video(args)
+        if check == True:
+            create_video(args)
     else:
         print(Fore.RED+Style.DIM+f"\nERROR: File '{args.source}' not found."+Fore.RESET+Style.RESET_ALL)
 
