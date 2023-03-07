@@ -86,7 +86,7 @@ def create_video(args):
 
             for k in range(1):
                 frame_array.append(i)
-            time.sleep(0.00001)
+            #time.sleep(0.00001)
 
         Pname, ex = os.path.splitext(vid_name)
         Pfile = Pname+"_.mp4"
@@ -94,7 +94,7 @@ def create_video(args):
         for i in range(len(frame_array)):
             out.write(frame_array[i])
         out.release()
-        vid2 = ffmpeg.input(out,format='rawvideo')
+        #vid2 = ffmpeg.input(out,format='rawvideo')#################################
         vid = ffmpeg.input(Pfile)
 
         try:
@@ -126,7 +126,7 @@ def frames_editor(filterm,source):
         cam = cv.VideoCapture(source)
         ffmp_input = ffmpeg.input(source)
         audio = ffmp_input.audio
-        videos = ffmp_input.video######################################################
+        #videos = ffmp_input.video######################################################
         
         print("PROCESSING FRAMES...")
         pbar = tqdm(total=int(n_frames))
