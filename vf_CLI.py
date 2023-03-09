@@ -16,20 +16,23 @@ frame_rate = ""
 vid_name = ""
 audio = ""
 check = True
+exaud = False
 
 init()
 
 def main():
-    global vid_name
+    global vid_name, exaud
     parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Video filter on CLI")
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
+    parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
     parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','sharp','blur','median',
                                                                                 'denoisingCol','2d','pyrdown','pencil','mean'],help='Filter method')
-
     args=parser.parse_args()
     vid_name = args.destination
+    if args.exclude_audio:
+        exaud = True
     app(args)
 
 def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'
@@ -121,7 +124,8 @@ def frames_editor(filterm,source):
     try:
         cam = cv.VideoCapture(source)
         ffmp_input = ffmpeg.input(source)
-        audio = ffmp_input.audio
+        if exaud == False:
+            audio = ffmp_input.audio
         
         print("PROCESSING FRAMES...")
         pbar = tqdm(total=int(n_frames))
