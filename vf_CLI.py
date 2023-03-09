@@ -27,8 +27,8 @@ def main():
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
     parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
-    parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','sharp','blur','median',
-                                                                                'denoisingCol','2d','pyrdown','pencil','mean'],help='Filter method')
+    parser.add_argument('-flt','--filter',type=str,default='bilateral',choices=['bilateral','sharp','blur','median','denoisingCol',
+                                                                                '2d','pyrdown','pencil','mean'],help='Filter method')
     args=parser.parse_args()
     vid_name = args.destination
     if args.exclude_audio:
@@ -37,7 +37,7 @@ def main():
 
 def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'
     if filterm == 'bilateral':
-        edit = cv.bilateralFilter(fr,9,75,75)
+        edit = cv.bilateralFilter(fr,9,85,85)#(fr,9,75,75)
     elif filterm == 'blur':
         edit = cv.blur(fr, (5,5))
     elif filterm == 'median':
