@@ -3,7 +3,6 @@
 import cv2 as cv
 import ffmpeg
 import numpy as np
-#import threading
 import time
 import os
 from colorama import init, Fore, Style
@@ -86,7 +85,7 @@ def create_video(args):
 
             for k in range(1):
                 frame_array.append(i)
-            time.sleep(0.00001)
+            #time.sleep(0.00001)
 
         Pname, ex = os.path.splitext(vid_name)
         Pfile = Pname+"_.mp4"
@@ -97,13 +96,13 @@ def create_video(args):
         vid = ffmpeg.input(Pfile)
 
         try:
-            ffmpeg.output(audio,vid,vid_name).run()#vid
+            ffmpeg.output(audio,vid,vid_name).run()
             print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
             if args.demo:
                 make_comp(args)
         except:
             try:
-                ffmpeg.output(vid,vid_name).run()#vid'''
+                ffmpeg.output(vid,vid_name).run()
                 print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
                 if args.demo:
                     make_comp(args)
