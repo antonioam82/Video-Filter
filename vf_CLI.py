@@ -37,7 +37,10 @@ def main():
 
 def aply_method(filterm,fr): #'bilateral','blur','median','denoisingCol','2d','pyrdown','sketched','mean'
     if filterm == 'bilateral':
-        edit = cv.bilateralFilter(fr,9,85,85)#(fr,9,75,75)
+        edit = cv.bilateralFilter(fr,13,75,75)#(fr,9,75,75)
+    elif filterm == '2d':
+        kernel = np.ones((5,5),np.float32)/25
+        edit = cv.filter2D(fr,-1,kernel)
     elif filterm == 'blur':
         edit = cv.blur(fr, (5,5))
     elif filterm == 'median':
@@ -167,3 +170,4 @@ def app(args):
 
 if __name__=="__main__":
     main()
+
