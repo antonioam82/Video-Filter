@@ -22,7 +22,7 @@ init()
 
 def main():
     global vid_name, exaud
-    parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Video filter on CLI")
+    parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Bilateral video filter on CLI")
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
