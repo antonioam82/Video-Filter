@@ -6,7 +6,7 @@ import numpy as np
 import time
 import os
 from colorama import init, Fore, Style
-from pydub import AudioSegment
+#from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
 
