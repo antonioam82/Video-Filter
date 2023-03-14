@@ -10,9 +10,6 @@ from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
 
-# vf_CLI.py -src doaxx.mp4 -dest doaxx_2dfilt.mp4 -flt 2d -ea +
-# vfb_CLI.py -src doaxx_2dfilt.mp4 dest doaxx_filt13.mp3 -ea -d -pd 13
-
 n_frames = 0
 frame_list = []
 frame_rate = ""
