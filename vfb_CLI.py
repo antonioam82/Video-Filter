@@ -6,7 +6,7 @@ import numpy as np
 import time
 import os
 from colorama import init, Fore, Style
-#from pydub import AudioSegment
+from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
 
@@ -119,26 +119,31 @@ def frames_editor(args):
     
 def app(args):
     global n_frames, frame_rate
-    if args.source in os.listdir():
-        probe = ffmpeg.probe(args.source)
-        video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
-        n_frames = (video_streams[0]['nb_frames'])
-        height = (video_streams[0]['height'])
-        width = (video_streams[0]['width'])
-        frame_rate = (video_streams[0]['avg_frame_rate'])
-        codec_type = (video_streams[0]['avg_frame_rate'])
-        print(Fore.YELLOW+"\n******************VIDEO INFO******************")
-        print(f'SOURCE FILE: {args.source}')
-        print(f'Number of frames: {n_frames}')
-        print(f'Frame Rate: {frame_rate}')
-        print(f'Width: {width}')
-        print(f'Height: {height}')
-        print("**********************************************\n"+Fore.RESET)
-        frames_editor(args)
-        if check == True:
-            create_video(args)
+    name, ex = os.path.splitext(args.source)
+    name2, ex2 = os.path.splitext(args.destination)
+    if ex == ".mp4" and ex2 == ".mp4":
+        if args.source in os.listdir():
+            probe = ffmpeg.probe(args.source)
+            video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+            n_frames = (video_streams[0]['nb_frames'])
+            height = (video_streams[0]['height'])
+            width = (video_streams[0]['width'])
+            frame_rate = (video_streams[0]['avg_frame_rate'])
+            codec_type = (video_streams[0]['avg_frame_rate'])
+            print(Fore.YELLOW+"\n******************VIDEO INFO******************")
+            print(f'SOURCE FILE: {args.source}')
+            print(f'Number of frames: {n_frames}')
+            print(f'Frame Rate: {frame_rate}')
+            print(f'Width: {width}')
+            print(f'Height: {height}')
+            print("**********************************************\n"+Fore.RESET)
+            frames_editor(args)
+            if check == True:
+                create_video(args)
+        else:
+            print(Fore.RED+Style.DIM+f"\nERROR: File '{args.source}' not found."+Fore.RESET+Style.RESET_ALL)
     else:
-        print(Fore.RED+Style.DIM+f"\nERROR: File '{args.source}' not found."+Fore.RESET+Style.RESET_ALL)
+         print(Fore.RED+Style.DIM+"\nBAD FILE FORMAT: Source file and destination file must have 'mp4' extension."+Fore.RESET+Style.RESET_ALL)
 
 if __name__=="__main__":
     main()
