@@ -22,14 +22,14 @@ init()
 
 def main():
     global vid_name, exaud
-    parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Bilateral video filter on CLI")
+    parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
     parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
-    parser.add_argument('-pd','--pixel_diameter',type=int,default=9,help='Pixel diameter')
-    parser.add_argument('-sgc','--sigma_color',type=float,default=75,help='Sigma color value')
-    parser.add_argument('-sgs','--sigma_space',type=float,default=75,help='Sigma space value')
+    parser.add_argument('-pd','--pixel_diameter',type=int,default=9,help='Pixel diameter [Default: 9]')
+    parser.add_argument('-sgc','--sigma_color',type=float,default=75,help='Sigma color value [Default: 75]')
+    parser.add_argument('-sgs','--sigma_space',type=float,default=75,help='Sigma space value [Default: 75]')
     '''parser.add_argument('-bt','--border_type',type=str,default='BORDER_DEFAULT',help='Border type',choices=['MORPH_ERODE','MORPH_DILATE','MORPH_OPEN','MORPH_CLOSE',
                                                                                                             'MORPH_GRADIENT','MORPH_TOPHAT','MORPH_BLACKHAT','MORPH_HITMISS'])'''
     args=parser.parse_args()
