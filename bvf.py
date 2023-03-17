@@ -5,7 +5,7 @@ import ffmpeg
 import numpy as np
 import time
 import os
-from colorama import init, Fore, Style
+from colorama import init, Fore, Back, Style
 from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
@@ -131,6 +131,8 @@ def app(args):
             width = (video_streams[0]['width'])
             frame_rate = (video_streams[0]['avg_frame_rate'])
             codec_type = (video_streams[0]['avg_frame_rate'])
+
+            print(Fore.BLACK+Back.GREEN+"\nB I L A T E R A L  V I D E O   F I L T E R  1.0\n"+Fore.RESET+Back.RESET)
             
             print(Fore.YELLOW+"\n******************VIDEO INFO******************")
             print(f'SOURCE FILE: {args.source}')
