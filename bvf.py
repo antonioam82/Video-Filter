@@ -22,7 +22,7 @@ init()
 
 def main():
     global vid_name, exaud
-    parser = argparse.ArgumentParser(prog="videoFilter_CLI",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
+    parser = argparse.ArgumentParser(prog="bvf",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
     parser.add_argument('-d','--demo',action='store_true',help='test video')
@@ -63,12 +63,13 @@ def create_video(args):
             for k in range(1):
                 frame_array.append(i)
             #time.sleep(0.00001)
-
+        print("\nFINISHING VIDEO...")      
         Pname, ex = os.path.splitext(vid_name)
         Pfile = Pname+"_.mp4"
         out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
         for i in range(len(frame_array)):
             out.write(frame_array[i])
+        
         out.release()
         vid = ffmpeg.input(Pfile)
 
