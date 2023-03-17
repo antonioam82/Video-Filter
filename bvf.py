@@ -132,15 +132,15 @@ def app(args):
             frame_rate = (video_streams[0]['avg_frame_rate'])
             codec_type = (video_streams[0]['avg_frame_rate'])
 
-            print(Fore.BLACK+Back.GREEN+"\nB I L A T E R A L  V I D E O   F I L T E R  1.0\n"+Fore.RESET+Back.RESET)
+            print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.0 \n"+Fore.RESET+Back.RESET)
             
-            print(Fore.YELLOW+"\n******************VIDEO INFO******************")
+            print(Fore.YELLOW+"\n********************VIDEO INFO********************")
             print(f'SOURCE FILE: {args.source}')
             print(f'Number of frames: {n_frames}')
             print(f'Frame Rate: {frame_rate}')
             print(f'Width: {width}')
             print(f'Height: {height}')
-            print("**********************************************\n"+Fore.RESET)
+            print("**************************************************\n"+Fore.RESET)
             
             frames_editor(args)
             if check == True:
