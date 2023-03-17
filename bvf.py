@@ -131,6 +131,7 @@ def app(args):
             width = (video_streams[0]['width'])
             frame_rate = (video_streams[0]['avg_frame_rate'])
             codec_type = (video_streams[0]['avg_frame_rate'])
+            
             print(Fore.YELLOW+"\n******************VIDEO INFO******************")
             print(f'SOURCE FILE: {args.source}')
             print(f'Number of frames: {n_frames}')
@@ -138,6 +139,7 @@ def app(args):
             print(f'Width: {width}')
             print(f'Height: {height}')
             print("**********************************************\n"+Fore.RESET)
+            
             frames_editor(args)
             if check == True:
                 create_video(args)
