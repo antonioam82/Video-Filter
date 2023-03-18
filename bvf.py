@@ -130,7 +130,7 @@ def app(args):
             height = (video_streams[0]['height'])
             width = (video_streams[0]['width'])
             frame_rate = (video_streams[0]['avg_frame_rate'])
-            #codec_type = (video_streams[0]['codec_type'])
+            #codec_type = (video_streams[0]['codec_name'])
 
             print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.0 \n"+Fore.RESET+Back.RESET)
             
@@ -140,6 +140,7 @@ def app(args):
             print(f'Frame Rate: {frame_rate}')
             print(f'Width: {width}')
             print(f'Height: {height}')
+            #print(f'Codec Name: {codec_name}')
             print("**************************************************\n"+Fore.RESET)
             
             frames_editor(args)
