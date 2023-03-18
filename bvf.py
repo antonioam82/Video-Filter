@@ -63,7 +63,7 @@ def create_video(args):
             for k in range(1):
                 frame_array.append(i)
             #time.sleep(0.00001)
-        print("\nFINISHING VIDEO...")      
+        print("\nFINALIZING VIDEO...")      
         Pname, ex = os.path.splitext(vid_name)
         Pfile = Pname+"_.mp4"
         out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), size)
