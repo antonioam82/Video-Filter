@@ -130,7 +130,7 @@ def app(args):
             height = (video_streams[0]['height'])
             width = (video_streams[0]['width'])
             frame_rate = (video_streams[0]['avg_frame_rate'])
-            #codec_type = (video_streams[0]['avg_frame_rate'])
+            #codec_type = (video_streams[0]['codec_type'])
 
             print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.0 \n"+Fore.RESET+Back.RESET)
             
