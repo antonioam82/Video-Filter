@@ -5,7 +5,6 @@ import ffmpeg
 import numpy as np
 import time
 import os
-import threading
 from colorama import init, Fore, Back, Style
 from pydub import AudioSegment
 from tqdm import tqdm
@@ -26,33 +25,16 @@ def main():
     parser = argparse.ArgumentParser(prog="bvf",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
     parser.add_argument('-src','--source',required=True,type=str,help='Source video')
     parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
-    parser.add_argument('-d','--demo',action='store_true',help='test video')
     parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
     parser.add_argument('-pd','--pixel_diameter',type=int,default=9,help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc','--sigma_color',type=float,default=75,help='Sigma color value [Default: 75]')
     parser.add_argument('-sgs','--sigma_space',type=float,default=75,help='Sigma space value [Default: 75]')
-    '''parser.add_argument('-bt','--border_type',type=str,default='BORDER_DEFAULT',help='Border type',choices=['MORPH_ERODE','MORPH_DILATE','MORPH_OPEN','MORPH_CLOSE',
-                                                                                                            'MORPH_GRADIENT','MORPH_TOPHAT','MORPH_BLACKHAT','MORPH_HITMISS'])'''
+    
     args=parser.parse_args()
     vid_name = args.destination
     if args.exclude_audio:
         exaud = True
-    t = threading.Thread(target=app, args=(args,))
-    t.start()
-    #app(args)
-
-def make_comp(args):
-    print("\nCREATING SPLIT SCREEN VIDEO...")
-    from moviepy.editor import VideoFileClip, clips_array
-    
-    vid1 = VideoFileClip(args.source).subclip(0, 3)
-    vid2 = VideoFileClip(args.destination).subclip(0, 3)
-
-    comb = clips_array([[vid1],
-                        [vid2]])
-    comb.write_videofile("test_video.mp4")
-    vid1.close()
-    vid2.close()
+    app(args)
 
 def create_video(args):
     frame_array = []
@@ -76,17 +58,16 @@ def create_video(args):
         out.release()
         vid = ffmpeg.input(Pfile)
 
+        if vid_name in os.listdir():
+            os.remove(vid_name)
+
         try:
             ffmpeg.output(audio,vid,vid_name).run()
             print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
-            if args.demo:
-                make_comp(args)
         except:
             try:
                 ffmpeg.output(vid,vid_name).run()
                 print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
-                if args.demo:
-                    make_comp(args)
             except Exception as e:
                 print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
                 
@@ -156,4 +137,3 @@ def app(args):
 
 if __name__=="__main__":
     main()
-
