@@ -5,6 +5,7 @@ import ffmpeg
 import numpy as np
 import time
 import os
+import threading
 from colorama import init, Fore, Back, Style
 from pydub import AudioSegment
 from tqdm import tqdm
@@ -36,7 +37,9 @@ def main():
     vid_name = args.destination
     if args.exclude_audio:
         exaud = True
-    app(args)
+    t = threading.Thread(target=app, args=(args,))
+    t.start()
+    #app(args)
 
 def make_comp(args):
     print("\nCREATING SPLIT SCREEN VIDEO...")
@@ -153,3 +156,4 @@ def app(args):
 
 if __name__=="__main__":
     main()
+
