@@ -3,7 +3,6 @@
 import cv2 as cv
 import ffmpeg
 import numpy as np
-import time
 import os
 from colorama import init, Fore, Back, Style
 from pydub import AudioSegment
