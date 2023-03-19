@@ -5,7 +5,6 @@ import ffmpeg
 import numpy as np
 import os
 from colorama import init, Fore, Back, Style
-from pydub import AudioSegment
 from tqdm import tqdm
 import argparse
 
