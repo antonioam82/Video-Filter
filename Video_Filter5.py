@@ -20,6 +20,7 @@ class app:
         self.currentDir.set(os.getcwd())
         self.filename = StringVar()
         self.file = None
+        mute = False
         self.canceled = False
         self.frames_list = []
         self.vid_name = None
@@ -61,16 +62,27 @@ class app:
                 self.file = self.dir
  
                 probe = ffmpeg.probe(self.file)
+                
                 self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
                 self.nframes = (self.video_streams[0]['nb_frames'])
                 self.height = (self.video_streams[0]['height'])
                 self.fr = (self.video_streams[0]['avg_frame_rate'])
+                self.check_audio()
                 self.vidName = (self.file).split("/")[-1]
                 self.filename.set(self.vidName)
                 self.frLabel.configure(text=self.fr)
                 self.nframesLabel.configure(text=self.nframes)
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
+
+    def check_audio(self):
+        audio_probe = ffmpeg.probe(self.file, select_streams='a')
+        if audio_probe['streams']:
+            print("El video contiene audio")
+            self.mute = False
+        else:
+            print("El video no contine audio")
+            self.mute = True
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -156,13 +168,10 @@ class app:
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input('filteredVideo.mp4')
 
-                try:
-                    print("ATTEMP 1")
+                if self.mute == False:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()
-                except:
-                    print("ATTEMP 2")
-                    if not self.vid_name in os.listdir():
-                        ffmpeg.output(vid,self.vid_name).run()
+                else:
+                    ffmpeg.output(vid,self.vid_name).run()
  
             self.frames_list = []
  
