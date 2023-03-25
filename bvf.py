@@ -8,14 +8,9 @@ from colorama import init, Fore, Back, Style
 from tqdm import tqdm
 import argparse
 
-n_frames = 0
 frame_list = []
-frame_rate = ""
-vid_name = ""
-audio = ""
 check = True
 exaud = False
-#mute = False
 
 init()
 
