@@ -61,13 +61,15 @@ def create_video(args):
             os.remove(vid_name)
 
         try:
-            ffmpeg.output(audio,vid,vid_name).run()
-            print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
-        except:
-            try:
+            if mute == False and exaud == False:
+                print("11111111111111111111111111111111111")
+                ffmpeg.output(audio,vid,vid_name).run()
+                print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
+            else:
+                print("22222222222222222222222222222222222")
                 ffmpeg.output(vid,vid_name).run()
                 print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
-            except Exception as e:
+        except Exception as e:
                 print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
                 
         if Pfile in os.listdir():
@@ -82,7 +84,7 @@ def frames_editor(args):
     try:
         cam = cv.VideoCapture(args.source)
         ffmp_input = ffmpeg.input(args.source)
-        if exaud == False:
+        if mute == False and exaud == False: 
             audio = ffmp_input.audio
         
         print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
