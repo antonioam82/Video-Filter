@@ -15,6 +15,7 @@ vid_name = ""
 audio = ""
 check = True
 exaud = False
+#mute = False
 
 init()
 
@@ -99,6 +100,16 @@ def frames_editor(args):
     except Exception as e:
         check = False
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
+
+def check_audio(file):
+    global mute
+    audio_probe = ffmpeg.probe(file, select_streams='a')
+    if audio_probe['streams']:
+        mute = False
+        return "Yes"
+    else:
+        mute = True
+        return "No"
     
 def app(args):
     global n_frames, frame_rate
@@ -112,6 +123,7 @@ def app(args):
             height = (video_streams[0]['height'])
             width = (video_streams[0]['width'])
             frame_rate = (video_streams[0]['avg_frame_rate'])
+            audio_c = check_audio(args.source)
             #codec_name = (video_streams[0]['codec_name'])
 
             print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.0 \n"+Fore.RESET+Back.RESET)
@@ -122,6 +134,7 @@ def app(args):
             print(f'Frame Rate: {frame_rate}')
             print(f'Width: {width}')
             print(f'Height: {height}')
+            print(f'Audio: {audio_c}')
             #print(f'Codec Name: {codec_name}')
             print("**************************************************\n"+Fore.RESET)
             
