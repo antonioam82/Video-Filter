@@ -147,7 +147,7 @@ class app:
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
  
-            name,ex = os.path.splitext(self.vidName)
+            name,ex = os.path.splitext(self.vidName)#???????????
             #self.vid_name = (name+'('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
@@ -185,12 +185,13 @@ class app:
                     #os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
-                    try:
-                        self.processLabel.configure(text="GETTING AUDIO DATA...")
-                        input = ffmpeg.input(self.file)
-                        self.audio = input.audio
-                    except:
-                        pass
+                    if self.mute == False:
+                        try:
+                            self.processLabel.configure(text="GETTING AUDIO DATA...")
+                            input = ffmpeg.input(self.file)
+                            self.audio = input.audio
+                        except:
+                            pass
                     self.currentDir.set(os.getcwd())##
                     dif = 0
                     self.counter = 0
