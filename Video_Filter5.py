@@ -127,7 +127,6 @@ class app:
         return result
  
     def create_new_video(self):
-        #global Pfile
         frame_array = []
         self.counter = 0
         dif = 0
@@ -149,7 +148,6 @@ class app:
                     dif=percent
  
             name,ex = os.path.splitext(self.vidName)#???????????
-            #self.vid_name = (name+'('+self.filter_method.get().replace(" ","")+')'+'.mp4').replace(" ","_")
             if self.vid_name in os.listdir() and self.canceled == False:
                 self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
  
@@ -168,7 +166,6 @@ class app:
  
                 self.processLabel.configure(text="ADDING AUDIO...")
                 vid = ffmpeg.input(self.Pfile)
-                #os.remove(self.Pfile)
 
                 if self.mute == False:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()
@@ -198,7 +195,7 @@ class app:
                             self.audio = input.audio
                         except:
                             pass
-                    self.currentDir.set(os.getcwd())##
+                    self.currentDir.set(os.getcwd())
                     dif = 0
                     self.counter = 0
                     self.canceled = False
