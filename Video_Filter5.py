@@ -127,6 +127,7 @@ class app:
         return result
  
     def create_new_video(self):
+        #global Pfile
         frame_array = []
         self.counter = 0
         dif = 0
@@ -156,7 +157,7 @@ class app:
                 if self.vid_name in os.listdir():
                     os.remove(self.vid_name)
                 frame_rate = eval(self.fr)
-                out = cv.VideoWriter('filteredVideo.mp4',cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
+                out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
                 print("CREATING VIDEO...")
                 print('FA:',len(frame_array))
                 self.processLabel.configure(text="FINALIZING VIDEO...")
@@ -166,7 +167,8 @@ class app:
                 out.release()
  
                 self.processLabel.configure(text="ADDING AUDIO...")
-                vid = ffmpeg.input('filteredVideo.mp4')
+                vid = ffmpeg.input(self.Pfile)
+                #os.remove(self.Pfile)
 
                 if self.mute == False:
                     ffmpeg.output(self.audio,vid,self.vid_name).run()
@@ -182,6 +184,8 @@ class app:
                             title="Save as",defaultextension='.mp4')
             if self.vid_name:
                 try:
+                    Pname, ex = os.path.splitext(self.vid_name)
+                    self.Pfile = Pname+"_.mp4"
                     #os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
@@ -215,11 +219,15 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                    if 'filteredVideo.mp4' in os.listdir():
-                        if not self.vid_name in os.listdir():
+                    if os.path.isdir(self.vid_name):
+                        os.remove(self.vid_name)
+                        print("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
+                        '''if not self.vid_name in os.listdir():
+                            print("2222222222222222222222222222222222222222222222222222222222222222222222")
                             os.rename('filteredVideo.mp4',self.vid_name)
                         else:
-                            os.remove('filteredVideo.mp4')
+                            print("333333333333333333333333333333333333333333333333333333333333333333333333333")
+                            os.remove('filteredVideo.mp4')'''
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
