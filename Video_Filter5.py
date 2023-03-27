@@ -130,8 +130,10 @@ class app:
         frame_array = []
         self.counter = 0
         dif = 0
-        self.question = "yes"
         if len(self.frames_list) > 0:
+            print(self.vid_name)
+            if os.path.split(self.vid_name)[1] in os.listdir():
+                os.remove(self.vid_name)
             for i in self.frames_list:
                 if self.canceled == False:
                     self.counter+=1
@@ -148,31 +150,26 @@ class app:
                     dif=percent
  
             name,ex = os.path.splitext(self.vidName)#???????????
-            if self.vid_name in os.listdir() and self.canceled == False:
-                self.question = messagebox.askquestion("OVERWRITE?","{} already exists. Overwrite? [y/N].".format(self.vid_name))
  
-            if self.question == "yes" and self.canceled == False:
-                if self.vid_name in os.listdir():
-                    os.remove(self.vid_name)
-                frame_rate = eval(self.fr)
-                out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
-                print("CREATING VIDEO...")
-                print('FA:',len(frame_array))
-                self.processLabel.configure(text="FINALIZING VIDEO...")
-                for e in range(len(frame_array)):
-                    out.write(frame_array[e])
+            frame_rate = eval(self.fr)
+            out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
+            print("CREATING VIDEO...")
+            print('FA:',len(frame_array))
+            self.processLabel.configure(text="FINALIZING VIDEO...")
+            for e in range(len(frame_array)):
+                out.write(frame_array[e])
  
-                out.release()
+            out.release()
  
-                self.processLabel.configure(text="ADDING AUDIO...")
-                vid = ffmpeg.input(self.Pfile)
+            self.processLabel.configure(text="ADDING AUDIO...")
+            vid = ffmpeg.input(self.Pfile)
 
-                if self.mute == False:
-                    ffmpeg.output(self.audio,vid,self.vid_name).run()
-                else:
-                    ffmpeg.output(vid,self.vid_name).run()
+            if self.mute == False:
+                ffmpeg.output(self.audio,vid,self.vid_name).run()
+            else:
+                ffmpeg.output(vid,self.vid_name).run()
  
-            self.frames_list = []
+        self.frames_list = []
  
     def filtering(self):
         if self.file:
