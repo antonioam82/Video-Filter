@@ -183,10 +183,12 @@ class app:
             self.vid_name = filedialog.asksaveasfilename(initialdir="/",
                             title="Save as",defaultextension='.mp4')
             if self.vid_name:
+                
                 try:
+                    directory = os.path.split(self.vid_name)[0]
                     Pname, ex = os.path.splitext(self.vid_name)
                     self.Pfile = Pname+"_.mp4"
-                    #os.chdir(directory)
+                    os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
                     if self.mute == False:
@@ -218,16 +220,12 @@ class app:
                     self.create_new_video()
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
-                        messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(self.vid_name))
-                    if os.path.isdir(self.vid_name):
-                        os.remove(self.vid_name)
-                        print("1111111111111111111111111111111111111111111111111111111111111111111111111111111111111")
-                        '''if not self.vid_name in os.listdir():
-                            print("2222222222222222222222222222222222222222222222222222222222222222222222")
-                            os.rename('filteredVideo.mp4',self.vid_name)
-                        else:
-                            print("333333333333333333333333333333333333333333333333333333333333333333333333333")
-                            os.remove('filteredVideo.mp4')'''
+                        messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
+                    print(os.getcwd())
+                    print(self.Pfile)
+                    if os.path.split(self.Pfile)[1] in os.listdir():
+                        os.remove(self.Pfile)
+
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
                 self.btnStart.configure(state='normal')
