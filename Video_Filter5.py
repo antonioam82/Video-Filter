@@ -174,7 +174,7 @@ class app:
     def filtering(self):
         if self.file:
             self.vid_name = filedialog.asksaveasfilename(initialdir="/",
-                            title="Save as",defaultextension='.mp4')
+                            title="Save as",initialfile="filt_video.mp4",defaultextension='.mp4')
             if self.vid_name:
                 
                 try:
