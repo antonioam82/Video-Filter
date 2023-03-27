@@ -221,8 +221,7 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False and self.question == "yes":
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
-                    print(os.getcwd())
-                    print(self.Pfile)
+
                     if os.path.split(self.Pfile)[1] in os.listdir():
                         os.remove(self.Pfile)
 
