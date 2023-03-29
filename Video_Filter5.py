@@ -130,6 +130,7 @@ class app:
         frame_array = []
         self.counter = 0
         dif = 0
+        size = ""
         if len(self.frames_list) > 0:
             print(self.vid_name)
             if os.path.split(self.vid_name)[1] in os.listdir():
@@ -209,8 +210,11 @@ class app:
                             self.prog_bar.step(self.percent-dif)
                             self.processLabel.configure(text="PROCESSING FRAMES: {} ({}%)".format((self.counter),int(self.percent)))
                             dif=self.percent
- 
-                    self.create_new_video()
+
+                    if self.canceled == False:
+                        self.create_new_video()
+                    else:
+                        self.frames_list = []
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
