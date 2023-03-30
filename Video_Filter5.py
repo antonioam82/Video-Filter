@@ -74,6 +74,7 @@ class app:
                 self.nframesLabel.configure(text=self.nframes)
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
+            
 
     def check_audio(self):
         audio_probe = ffmpeg.probe(self.file, select_streams='a')
@@ -161,11 +162,11 @@ class app:
                 out.write(frame_array[e])
  
             out.release()
- 
-            self.processLabel.configure(text="ADDING AUDIO...")
+
             vid = ffmpeg.input(self.Pfile)
 
             if self.mute == False:
+                self.processLabel.configure(text="ADDING AUDIO...")
                 ffmpeg.output(self.audio,vid,self.vid_name).run()
             else:
                 ffmpeg.output(vid,self.vid_name).run()
