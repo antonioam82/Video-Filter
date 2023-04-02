@@ -48,7 +48,7 @@ class app:
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
         self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored",
-                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)","sketched"]#"Filter2D (Bright)"
+                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)","sketched","normalize"]#"Filter2D (Bright)"
         self.filter_method.set("Bilateral Filter")
  
         self.root.mainloop()
@@ -74,7 +74,6 @@ class app:
                 self.nframesLabel.configure(text=self.nframes)
         except Exception as e:
             messagebox.showwarning("UNEXPECTED ERROR",str(e))
-            
 
     def check_audio(self):
         audio_probe = ffmpeg.probe(self.file, select_streams='a')
@@ -106,6 +105,8 @@ class app:
             edit = cv.resize(fr, (1280, 720))
         elif self.filter_method.get() == "sketched":
             edit = self.sketching(fr)
+        elif self.filter_method.get() == "normalize":
+            edit = cv.normalize(fr, None, alpha=0,beta=200, norm_type=cv.NORM_MINMAX)
         return edit
  
     def cancel(self):
@@ -151,7 +152,7 @@ class app:
                     self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
                     dif=percent
  
-            name,ex = os.path.splitext(self.vidName)#???????????
+            #name,ex = os.path.splitext(self.vidName)
  
             frame_rate = eval(self.fr)
             out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
