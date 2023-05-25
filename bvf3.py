@@ -121,7 +121,7 @@ def app(args):
             audio_c = check_audio(args.source)
             #codec_name = (video_streams[0]['codec_name'])
 
-            print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.0 \n"+Fore.RESET+Back.RESET)
+            print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.1 \n"+Fore.RESET+Back.RESET)
             
             print(Fore.YELLOW+"\n********************VIDEO INFO********************")
             print(f'SOURCE FILE: {args.source}')
