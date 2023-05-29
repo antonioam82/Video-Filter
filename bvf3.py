@@ -17,8 +17,8 @@ init()
 def main():
     global vid_name, exaud
     parser = argparse.ArgumentParser(prog="bvf",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
-    parser.add_argument('-src','--source',required=True,type=str,help='Source video')
-    parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=str,help='Destination video')
+    parser.add_argument('-src','--source',required=True,type=check_file,help='Source video')
+    parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=check_extension,help='Destination video')
     parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
     parser.add_argument('-pd','--pixel_diameter',type=int,default=9,help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc','--sigma_color',type=float,default=75,help='Sigma color value [Default: 75]')
@@ -30,19 +30,27 @@ def main():
         exaud = True
     app(args)
 
+def check_file(file):
+    if file in os.listdir():
+        name, ex = os.path.splitext(file)
+        if ex == ".mp4":
+            return file
+        else:
+            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"source file must be 'mp4' extension."+Fore.RESET+Style.RESET_ALL)
+    else:
+        raise argparse.ArgumentTypeError (Fore.RED+Style.BRIGHT+f"file '{file}' not found."+Fore.RESET+Style.RESET_ALL)
+
+def check_extension(file):
+    name, ex = os.path.splitext(file)
+    if ex == ".mp4":
+        return file
+    else:
+        raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"result file must be '.mp4' extension."+Fore.RESET+Style.RESET_ALL)
+
 def create_video(args):
-    #frame_array = []
     print("\nCREATING VIDEO...")
     try:
-        '''for i in tqdm(frame_list):
-            height = i.shape[0] 
-            width = i.shape[1]       
-            size = (width,height)
-
-            for k in range(1):
-                frame_array.append(i)
-            #time.sleep(0.00001)
-        print("\nFINALIZING VIDEO...")'''      
+     
         Pname, ex = os.path.splitext(vid_name)
         Pfile = Pname+"_.mp4"
         out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
@@ -108,38 +116,29 @@ def check_audio(file):
     
 def app(args):
     global n_frames, frame_rate, height, width
-    name, ex = os.path.splitext(args.source)
-    name2, ex2 = os.path.splitext(args.destination)
-    if ex == ".mp4" and ex2 == ".mp4":
-        if args.source in os.listdir():
-            probe = ffmpeg.probe(args.source)
-            video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
-            n_frames = (video_streams[0]['nb_frames'])
-            height = (video_streams[0]['height'])
-            width = (video_streams[0]['width'])
-            frame_rate = (video_streams[0]['avg_frame_rate'])
-            audio_c = check_audio(args.source)
-            #codec_name = (video_streams[0]['codec_name'])
 
-            print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.1 \n"+Fore.RESET+Back.RESET)
+    probe = ffmpeg.probe(args.source)
+    video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+    n_frames = (video_streams[0]['nb_frames'])
+    height = (video_streams[0]['height'])
+    width = (video_streams[0]['width'])
+    frame_rate = (video_streams[0]['avg_frame_rate'])
+    audio_c = check_audio(args.source)
+
+    print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.1 \n"+Fore.RESET+Back.RESET)
             
-            print(Fore.YELLOW+"\n********************VIDEO INFO********************")
-            print(f'SOURCE FILE: {args.source}')
-            print(f'Number of frames: {n_frames}')
-            print(f'Frame Rate: {frame_rate}')
-            print(f'Width: {width}')
-            print(f'Height: {height}')
-            print(f'Audio: {audio_c}')
-            #print(f'Codec Name: {codec_name}')
-            print("**************************************************\n"+Fore.RESET)
+    print(Fore.YELLOW+"\n********************VIDEO INFO********************")
+    print(f'SOURCE FILE: {args.source}')
+    print(f'Number of frames: {n_frames}')
+    print(f'Frame Rate: {frame_rate}')
+    print(f'Width: {width}')
+    print(f'Height: {height}')
+    print(f'Audio: {audio_c}')
+    print("**************************************************\n"+Fore.RESET)
             
-            frames_editor(args)
-            if check == True:
-                create_video(args)
-        else:
-            print(Fore.RED+Style.DIM+f"\nERROR: File '{args.source}' not found."+Fore.RESET+Style.RESET_ALL)
-    else:
-         print(Fore.RED+Style.DIM+"\nBAD FILE FORMAT: Source file and destination file must have 'mp4' extension."+Fore.RESET+Style.RESET_ALL)
+    frames_editor(args)
+    if check == True:
+        create_video(args)
 
 if __name__=="__main__":
     main()
