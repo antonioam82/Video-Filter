@@ -36,7 +36,7 @@ def check_file(file):
         if ex == ".mp4":
             return file
         else:
-            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"source file must be 'mp4' extension."+Fore.RESET+Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"source file must be '.mp4' extension."+Fore.RESET+Style.RESET_ALL)
     else:
         raise argparse.ArgumentTypeError (Fore.RED+Style.BRIGHT+f"file '{file}' not found."+Fore.RESET+Style.RESET_ALL)
 
