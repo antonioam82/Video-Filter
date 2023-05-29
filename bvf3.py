@@ -84,7 +84,7 @@ def frames_editor(args):
     global frame_list, audio, check
     try:
         cam = cv.VideoCapture(args.source)
-        ffmp_input = ffmpeg.input(args.source)
+        ffmp_input = ffmpeg.input(args.source) ###############################
         if mute == False and exaud == False: 
             audio = ffmp_input.audio
         
