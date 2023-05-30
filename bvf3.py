@@ -95,6 +95,7 @@ def frames_editor(args):
             ret,frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame,args.pixel_diameter,args.sigma_color,args.sigma_space)
+                #edited_frame = cv.blur(frame,(5,5))
                 frame_list.append(edited_frame)
                 pbar.update(ret)
         cam.release()
