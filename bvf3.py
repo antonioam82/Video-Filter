@@ -84,7 +84,7 @@ def frames_editor(args):
     global frame_list, audio, check
     try:
         cam = cv.VideoCapture(args.source)
-        ffmp_input = ffmpeg.input(args.source) ###############################
+        ffmp_input = ffmpeg.input(args.source)
         if mute == False and exaud == False: 
             audio = ffmp_input.audio
         
@@ -95,7 +95,6 @@ def frames_editor(args):
             ret,frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame,args.pixel_diameter,args.sigma_color,args.sigma_space)
-                #edited_frame = cv.blur(frame,(5,5))
                 frame_list.append(edited_frame)
                 pbar.update(ret)
         cam.release()
