@@ -7,7 +7,6 @@ import os
 from colorama import init, Fore, Back, Style
 from tqdm import tqdm
 import argparse
-from tempfile import NamedTemporaryFile
 
 frame_list = []
 check = True
@@ -17,15 +16,15 @@ init()
 
 def main():
     global vid_name, exaud
-    parser = argparse.ArgumentParser(prog="bvf 1.1", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
-    parser.add_argument('-src', '--source', required=True, type=check_file, help='Source video')
-    parser.add_argument('-dest', '--destination', default="NewFilteredVid.mp4", type=check_extension, help='Destination video')
-    parser.add_argument('-ea', '--exclude_audio', action='store_true', help='Exclude audio from processing')
-    parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
-    parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
-    parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
-
-    args = parser.parse_args()
+    parser = argparse.ArgumentParser(prog="bvf 1.1",description="Bilateral video filter on CLI",epilog='REPO: https://github.com/antonioam82/Video-Filter')
+    parser.add_argument('-src','--source',required=True,type=check_file,help='Source video')
+    parser.add_argument('-dest','--destination',default="NewFilteredVid.mp4",type=check_extension,help='Destination video')
+    parser.add_argument('-ea','--exclude_audio',action='store_true',help='Exclude audio from processing')
+    parser.add_argument('-pd','--pixel_diameter',type=int,default=9,help='Pixel diameter [Default: 9]')
+    parser.add_argument('-sgc','--sigma_color',type=float,default=75,help='Sigma color value [Default: 75]')
+    parser.add_argument('-sgs','--sigma_space',type=float,default=75,help='Sigma space value [Default: 75]')
+    
+    args=parser.parse_args()
     vid_name = args.destination
     if args.exclude_audio:
         exaud = True
@@ -37,70 +36,73 @@ def check_file(file):
         if ex == ".mp4":
             return file
         else:
-            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"source file must be '.mp4' extension."+Fore.RESET+Style.RESET_ALL)
     else:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
+        raise argparse.ArgumentTypeError (Fore.RED+Style.BRIGHT+f"file '{file}' not found."+Fore.RESET+Style.RESET_ALL)
 
 def check_extension(file):
     name, ex = os.path.splitext(file)
     if ex == ".mp4":
         return file
     else:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
+        raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"result file must be '.mp4' extension."+Fore.RESET+Style.RESET_ALL)
 
 def create_video(args):
     print("\nCREATING VIDEO...")
     try:
-        with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
-            temp_filename = temp_file.name
-            out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
-            for frame in tqdm(frame_list):
-                out.write(frame)
+     
+        Pname, ex = os.path.splitext(vid_name)
+        Pfile = Pname+"_.mp4"
+        out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
+        for frame in tqdm(frame_list):
+            out.write(frame)
+        
+        out.release()
+        vid = ffmpeg.input(Pfile)
 
-            out.release()
+        if vid_name in os.listdir():
+            os.remove(vid_name)
+
+        try:
+            if mute == False and exaud == False:
+                ffmpeg.output(audio,vid,vid_name).run()
+                print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
+            else:
+                ffmpeg.output(vid,vid_name).run()
+                print(Fore.YELLOW+Style.DIM+f"\nSuccessfully created video '{vid_name}'"+Fore.RESET+Style.RESET_ALL)
+        except Exception as e:
+                print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
+                
+        if Pfile in os.listdir():
+            os.remove(Pfile)
+            print("REMOVED {}".format(Pfile))
             
-            vid = ffmpeg.input(temp_filename)
-
-            try:
-                if mute == False and exaud == False:
-                    ffmpeg.output(audio, vid, vid_name).run()
-                    print(Fore.YELLOW + Style.DIM + f"\nSuccessfully created video '{vid_name}'" + Fore.RESET + Style.RESET_ALL)
-                else:
-                    ffmpeg.output(vid, vid_name).run()
-                    print(Fore.YELLOW + Style.DIM + f"\nSuccessfully created video '{vid_name}'" + Fore.RESET + Style.RESET_ALL)
-            except Exception as e:
-                print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
-
-            if temp_filename in os.listdir():
-                os.remove(temp_filename)
-                print("REMOVED {}".format(temp_filename))
-
     except Exception as e:
-        print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
+        print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def frames_editor(args):
     global frame_list, audio, check
     try:
         cam = cv.VideoCapture(args.source)
         ffmp_input = ffmpeg.input(args.source)
-        if mute == False and exaud == False:
+        if mute == False and exaud == False: 
             audio = ffmp_input.audio
-
+        
         print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
         pbar = tqdm(total=int(n_frames))
         ret = True
         while ret:
-            ret, frame = cam.read()
+            ret,frame = cam.read()
             if ret:
-                edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
+                edited_frame = cv.bilateralFilter(frame,args.pixel_diameter,args.sigma_color,args.sigma_space)
                 frame_list.append(edited_frame)
                 pbar.update(ret)
         cam.release()
         pbar.close()
-
+        
     except Exception as e:
         check = False
-        print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
+        print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
 
 def check_audio(file):
     global mute
@@ -111,7 +113,7 @@ def check_audio(file):
     else:
         mute = True
         return "No"
-
+    
 def app(args):
     global n_frames, frame_rate, height, width
 
@@ -123,20 +125,20 @@ def app(args):
     frame_rate = (video_streams[0]['avg_frame_rate'])
     audio_c = check_audio(args.source)
 
-    print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   1.1 \n" + Fore.RESET + Back.RESET)
-
-    print(Fore.YELLOW + "\n********************VIDEO INFO********************")
+    print(Fore.BLACK+Back.GREEN+"\n B I L A T E R A L  V I D E O   F I L T E R   1.1 \n"+Fore.RESET+Back.RESET)
+            
+    print(Fore.YELLOW+"\n********************VIDEO INFO********************")
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
     print(f'Frame Rate: {frame_rate}')
     print(f'Width: {width}')
     print(f'Height: {height}')
     print(f'Audio: {audio_c}')
-    print("**************************************************\n" + Fore.RESET)
-
+    print("**************************************************\n"+Fore.RESET)
+            
     frames_editor(args)
     if check == True:
         create_video(args)
 
-if __name__ == "__main__":
+if __name__=="__main__":
     main()
