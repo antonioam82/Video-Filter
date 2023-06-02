@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import cv2 as cv
 import ffmpeg
-import numpy as np
 import os
 from colorama import init, Fore, Back, Style
 from tqdm import tqdm
 import argparse
 from tempfile import NamedTemporaryFile
+import sys
 
 frame_list = []
 check = True
@@ -53,7 +53,12 @@ def create_video(args):
                     ffmpeg.output(vid, vid_name).run()
                     print(Fore.YELLOW + Style.DIM + f"\nSuccessfully created video '{vid_name}'" + Fore.RESET + Style.RESET_ALL)
             except Exception as e:
-                print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
+                error = str(e)
+                if error != "ffmpeg error (see stderr output for detail)":
+                    print(Fore.RED + Style.DIM + "\n" + error + Fore.RESET + Style.RESET_ALL)
+                else:
+                    for line in sys.stderr:
+                        print(line)
 
             if temp_filename in os.listdir(): ############
                 os.remove(temp_filename)
