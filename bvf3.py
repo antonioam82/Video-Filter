@@ -15,22 +15,6 @@ exaud = False
 
 init()
 
-def main():
-    global vid_name, exaud
-    parser = argparse.ArgumentParser(prog="bvf 1.1", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
-    parser.add_argument('-src', '--source', required=True, type=check_file, help='Source video')
-    parser.add_argument('-dest', '--destination', default="NewFilteredVid.mp4", type=check_extension, help='Destination video')
-    parser.add_argument('-ea', '--exclude_audio', action='store_true', help='Exclude audio from processing')
-    parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
-    parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
-    parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
-
-    args = parser.parse_args()
-    vid_name = args.destination
-    if args.exclude_audio:
-        exaud = True
-    app(args)
-
 def check_file(file):
     if file in os.listdir():
         name, ex = os.path.splitext(file)
@@ -137,6 +121,22 @@ def app(args):
     frames_editor(args)
     if check == True:
         create_video(args)
+
+def main():
+    global vid_name, exaud
+    parser = argparse.ArgumentParser(prog="bvf 1.1", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
+    parser.add_argument('-src', '--source', required=True, type=check_file, help='Source video')
+    parser.add_argument('-dest', '--destination', default="NewFilteredVid.mp4", type=check_extension, help='Destination video')
+    parser.add_argument('-ea', '--exclude_audio', action='store_true', help='Exclude audio from processing')
+    parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
+    parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
+    parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
+
+    args = parser.parse_args()
+    vid_name = args.destination
+    if args.exclude_audio:
+        exaud = True
+    app(args)
 
 if __name__ == "__main__":
     main()
