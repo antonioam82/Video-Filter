@@ -150,15 +150,13 @@ class app:
                     for k in range(1):
                         frame_array.append(i)
  
-                    percent = self.counter*100/int(self.nframes)
-                    self.prog_bar.step(percent-dif)
-                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                    dif=percent
- 
-            #name,ex = os.path.splitext(self.vidName)
+                    percent = self.counter*100/int(self.nframes)#
+                    self.prog_bar.step(percent-dif)#
+                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))#
+                    dif=percent#
  
             frame_rate = eval(self.fr)
-            out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
+            out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)
             print("CREATING VIDEO...")
             print('FA:',len(frame_array))
             self.processLabel.configure(text="FINALIZING VIDEO...")
@@ -185,8 +183,8 @@ class app:
                 
                 try:
                     directory = os.path.split(self.vid_name)[0]
-                    Pname, ex = os.path.splitext(self.vid_name)
-                    self.Pfile = Pname+"_.mp4"
+                    Pname, ex = os.path.splitext(self.vid_name)######################################
+                    self.Pfile = Pname+"_.mp4"#######################################################
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
@@ -225,7 +223,7 @@ class app:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
 
                     if os.path.split(self.Pfile)[1] in os.listdir():
-                        os.remove(self.Pfile)
+                        os.remove(self.Pfile)##############################
 
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
@@ -238,3 +236,4 @@ class app:
  
 if __name__=="__main__":
     app()
+
