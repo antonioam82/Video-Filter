@@ -138,6 +138,8 @@ class app:
         dif = 0
         size = ""
         if len(self.frames_list) > 0:
+            if self.vid_name in os.listdir():   ########################
+                os.remove(self.vidname)         ########################
             with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
                 temp_filename = temp_file.name
                 out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (self.width, self.height))
