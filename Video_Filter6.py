@@ -69,6 +69,7 @@ class app:
                 self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
                 self.nframes = (self.video_streams[0]['nb_frames'])
                 self.height = (self.video_streams[0]['height'])
+                self.width = (self.video_streams[0]['width'])
                 self.fr = (self.video_streams[0]['avg_frame_rate'])
                 self.check_audio()
                 self.vidName = (self.file).split("/")[-1]
@@ -136,13 +137,10 @@ class app:
         self.counter = 0
         dif = 0
         size = ""
-        
-        height = i.shape[0]
-        width = i.shape[1]
         if len(self.frames_list) > 0:
             with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
                 temp_filename = temp_file.name
-                out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (width, height))
+                out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (self.width, self.height))
                 self.processLabel.configure(text="FINALIZING VIDEO...")
                 for frame in self.frames_list:
                     if self.canceled == False:
