@@ -136,36 +136,26 @@ class app:
         self.counter = 0
         dif = 0
         size = ""
+        
+        height = i.shape[0]
+        width = i.shape[1]
         if len(self.frames_list) > 0:
-            print(self.vid_name)
-            if os.path.split(self.vid_name)[1] in os.listdir():
-                os.remove(self.vid_name)
-            for i in self.frames_list:
-                if self.canceled == False:
-                    self.counter+=1
-                    height = i.shape[0]
-                    width = i.shape[1]
-                    size = (width,height)
+            with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
+                temp_filename = temp_file.name
+                out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (width, height))
+                self.processLabel.configure(text="FINALIZING VIDEO...")
+                for frame in self.frames_list:
+                    if self.canceled == False:
+                        self.counter+=1
+                        out.write(frame)
+                        percent = self.counter*100/int(self.nframes)#
+                        self.prog_bar.step(percent-dif)#
+                        self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))#
+                        dif=percent#
  
-                    for k in range(1):
-                        frame_array.append(i)
- 
-                    percent = self.counter*100/int(self.nframes)#
-                    self.prog_bar.step(percent-dif)#
-                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))#
-                    dif=percent#
- 
-            frame_rate = eval(self.fr)
-            out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), size)
-            print("CREATING VIDEO...")
-            print('FA:',len(frame_array))
-            self.processLabel.configure(text="FINALIZING VIDEO...")
-            for e in range(len(frame_array)):
-                out.write(frame_array[e])
- 
-            out.release()
+                out.release()
 
-            vid = ffmpeg.input(self.Pfile)
+            vid = ffmpeg.input(temp_filename)
 
             if self.mute == False:
                 self.processLabel.configure(text="ADDING AUDIO...")
@@ -236,4 +226,6 @@ class app:
  
 if __name__=="__main__":
     app()
+
+
 
