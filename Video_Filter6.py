@@ -171,8 +171,6 @@ class app:
                 
                 try:
                     directory = os.path.split(self.vid_name)[0]
-                    Pname, ex = os.path.splitext(self.vid_name)######################################
-                    self.Pfile = Pname+"_.mp4"#######################################################
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
@@ -209,9 +207,6 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
-
-                    if os.path.split(self.Pfile)[1] in os.listdir():
-                        os.remove(self.Pfile)##############################
 
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
