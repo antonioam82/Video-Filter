@@ -5,7 +5,7 @@ from tkinter import ttk
 from tkinter import filedialog, messagebox
 import cv2 as cv
 import ffmpeg
-#import numpy as np
+import numpy as np
 import sys
 from tempfile import NamedTemporaryFile
 import threading
@@ -226,6 +226,5 @@ class app:
  
 if __name__=="__main__":
     app()
-
 
 
