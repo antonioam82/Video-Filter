@@ -115,6 +115,14 @@ class app:
  
     def cancel(self):
         self.canceled = True
+        self.processLabel.configure(text="CANCELLED")
+        self.btnStart.configure(state='normal')
+        self.btnSearch.configure(state='normal')
+        self.prog_bar.step(0)
+        self.counter = 0
+ 
+        self.frames_list = []        
+        '''self.canceled = True
         self.prog_bar.stop()
         self.prog_bar['value'] = 0
         self.processLabel.configure(text="CANCELLED")
@@ -125,7 +133,7 @@ class app:
         self.counter = 0
         self.frames_list = []
  
-        self.frames_list = []
+        self.frames_list = []'''
 
     def sketching(self,fr):
         gray = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
@@ -137,7 +145,6 @@ class app:
         return result
  
     def create_new_video(self):
-        frame_array = []
         self.counter = 0
         dif = 0
         size = ""
