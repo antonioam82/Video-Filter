@@ -137,9 +137,7 @@ class app:
         self.counter = 0
         dif = 0
         size = ""
-        if len(self.frames_list) > 0:
-            if self.vid_name in os.listdir():   ########################
-                os.remove(self.vidname)         ########################
+        if len(self.frames_list) > 0:        
             with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
                 temp_filename = temp_file.name
                 out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (self.width, self.height))
@@ -159,7 +157,7 @@ class app:
 
             if self.mute == False:
                 self.processLabel.configure(text="ADDING AUDIO...")
-                ffmpeg.output(self.audio,vid,self.vid_name).run()
+                stream = ffmpeg.output(self.audio,vid,self.vid_name).run()
             else:
                 ffmpeg.output(vid,self.vid_name).run()
  
@@ -169,8 +167,9 @@ class app:
         if self.file:
             self.vid_name = filedialog.asksaveasfilename(initialdir="/",
                             title="Save as",initialfile="filt_video.mp4",defaultextension='.mp4')
+            
+            print(self.vid_name)
             if self.vid_name:
-                
                 try:
                     directory = os.path.split(self.vid_name)[0]
                     os.chdir(directory)
