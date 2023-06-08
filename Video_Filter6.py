@@ -82,10 +82,10 @@ class app:
     def check_audio(self):
         audio_probe = ffmpeg.probe(self.file, select_streams='a')
         if audio_probe['streams']:
-            print("El video contiene audio")
+            print("Audio stream: True")
             self.mute = False
         else:
-            print("El video no contine audio")
+            print("Audio stream: False")
             self.mute = True
  
     def aply_method(self,fr):
@@ -137,7 +137,10 @@ class app:
         self.counter = 0
         dif = 0
         size = ""
-        if len(self.frames_list) > 0:        
+        if len(self.frames_list) > 0:
+            output_filename = self.vid_name
+            if os.path.exists(output_filename):
+                os.remove(output_filename)
             with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
                 temp_filename = temp_file.name
                 out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (self.width, self.height))
@@ -157,7 +160,7 @@ class app:
 
             if self.mute == False:
                 self.processLabel.configure(text="ADDING AUDIO...")
-                stream = ffmpeg.output(self.audio,vid,self.vid_name).run()
+                ffmpeg.output(self.audio,vid,self.vid_name).run()
             else:
                 ffmpeg.output(vid,self.vid_name).run()
  
@@ -168,7 +171,6 @@ class app:
             self.vid_name = filedialog.asksaveasfilename(initialdir="/",
                             title="Save as",initialfile="filt_video.mp4",defaultextension='.mp4')
             
-            print(self.vid_name)
             if self.vid_name:
                 try:
                     directory = os.path.split(self.vid_name)[0]
