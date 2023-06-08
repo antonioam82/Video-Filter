@@ -116,10 +116,14 @@ class app:
     def cancel(self):
         self.canceled = True
         self.prog_bar.stop()
+        self.prog_bar['value'] = 0
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
+        self.prog_bar.step(0)
+        self.percent = 0
         self.counter = 0
+        self.frames_list = []
  
         self.frames_list = []
 
