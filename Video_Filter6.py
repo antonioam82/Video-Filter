@@ -115,10 +115,10 @@ class app:
  
     def cancel(self):
         self.canceled = True
+        self.prog_bar.stop()
         self.processLabel.configure(text="CANCELLED")
         self.btnStart.configure(state='normal')
         self.btnSearch.configure(state='normal')
-        self.prog_bar.step(0)
         self.counter = 0
  
         self.frames_list = []
@@ -155,14 +155,14 @@ class app:
                         dif=percent#
  
                 out.release()
-
-            vid = ffmpeg.input(temp_filename)
-
-            if self.mute == False:
-                self.processLabel.configure(text="ADDING AUDIO...")
-                ffmpeg.output(self.audio,vid,self.vid_name).run()
-            else:
-                ffmpeg.output(vid,self.vid_name).run()
+            if self.canceled == False:
+                vid = ffmpeg.input(temp_filename)
+              
+                if self.mute == False:
+                    self.processLabel.configure(text="ADDING AUDIO...")
+                    ffmpeg.output(self.audio,vid,self.vid_name).run()
+                else:
+                    ffmpeg.output(vid,self.vid_name).run()
  
         self.frames_list = []
  
