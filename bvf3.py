@@ -8,13 +8,13 @@ from tqdm import tqdm
 import argparse
 from tempfile import NamedTemporaryFile
 import sys
-
+ 
 frame_list = []
 check = True
 exaud = False
-
+ 
 init()
-
+ 
 def check_file(file):
     if file in os.listdir():
         name, ex = os.path.splitext(file)
@@ -24,27 +24,27 @@ def check_file(file):
             raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
     else:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
-
+ 
 def check_extension(file):
     name, ex = os.path.splitext(file)
     if ex == ".mp4":
         return file
     else:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
-
+ 
 def create_video(args):
     print("\nCREATING VIDEO...")
     try:
         with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
-            for frame in tqdm(frame_list):
+            for frame in tqdm(frame_list,unit='frames'):
                 out.write(frame)
-
+ 
             out.release()
-            
+ 
             vid = ffmpeg.input(temp_filename)
-
+ 
             try:
                 if mute == False and exaud == False:
                     ffmpeg.output(audio, vid, vid_name).run()
@@ -59,14 +59,14 @@ def create_video(args):
                 else:
                     for line in sys.stderr:
                         print(line)
-
+ 
             if temp_filename in os.listdir(): ############
                 os.remove(temp_filename)
                 print("REMOVED {}".format(temp_filename))
-
+ 
     except Exception as e:
         print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
-
+ 
 def frames_editor(args):
     global frame_list, audio, check
     try:
@@ -74,9 +74,9 @@ def frames_editor(args):
         ffmp_input = ffmpeg.input(args.source)
         if mute == False and exaud == False:
             audio = ffmp_input.audio
-
+ 
         print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
-        pbar = tqdm(total=int(n_frames))
+        pbar = tqdm(total=int(n_frames),unit='frames')
         ret = True
         while ret:
             ret, frame = cam.read()
@@ -86,11 +86,11 @@ def frames_editor(args):
                 pbar.update(ret)
         cam.release()
         pbar.close()
-
+ 
     except Exception as e:
         check = False
         print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
-
+ 
 def check_audio(file):
     global mute
     audio_probe = ffmpeg.probe(file, select_streams='a')
@@ -100,10 +100,10 @@ def check_audio(file):
     else:
         mute = True
         return "No"
-
+ 
 def app(args):
     global n_frames, frame_rate, height, width
-
+ 
     probe = ffmpeg.probe(args.source)
     video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
     n_frames = (video_streams[0]['nb_frames'])
@@ -111,9 +111,9 @@ def app(args):
     width = (video_streams[0]['width'])
     frame_rate = (video_streams[0]['avg_frame_rate'])
     audio_c = check_audio(args.source)
-
+ 
     print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   1.2 \n" + Fore.RESET + Back.RESET)
-
+ 
     print(Fore.YELLOW + "\n********************VIDEO INFO********************")
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
@@ -122,11 +122,11 @@ def app(args):
     print(f'Frames Height: {height}')
     print(f'Audio Stream: {audio_c}')
     print("**************************************************\n" + Fore.RESET)
-
+ 
     frames_editor(args)
     if check == True:
         create_video(args)
-
+ 
 def main():
     global vid_name, exaud
     parser = argparse.ArgumentParser(prog="bvf 1.2", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
@@ -136,12 +136,12 @@ def main():
     parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
     parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
-
+ 
     args = parser.parse_args()
     vid_name = args.destination
     if args.exclude_audio:
         exaud = True
     app(args)
-
+ 
 if __name__ == "__main__":
     main()
