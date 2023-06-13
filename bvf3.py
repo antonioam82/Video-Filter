@@ -12,30 +12,35 @@ import sys
 frame_list = []
 check = True
 exaud = False
+video_formats = [".mp4",".mov",".avi"]
  
 init()
+
+
  
 def check_file(file):
     if file in os.listdir():
         name, ex = os.path.splitext(file)
-        if ex == ".mp4":
+        
+        if ex in video_formats:
             return file
         else:
-            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be a valid video format." + Fore.RESET + Style.RESET_ALL)
     else:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
  
 def check_extension(file):
+    global ex
     name, ex = os.path.splitext(file)
-    if ex == ".mp4":
+    if ex in video_formats:
         return file
     else:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be '.mp4' extension." + Fore.RESET + Style.RESET_ALL)
+        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be a valid video format." + Fore.RESET + Style.RESET_ALL)
  
 def create_video(args):
     print("\nCREATING VIDEO...")
     try:
-        with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
+        with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
             for frame in tqdm(frame_list,unit='frames'):
