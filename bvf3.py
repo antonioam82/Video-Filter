@@ -15,8 +15,6 @@ exaud = False
 video_formats = [".mp4",".mov",".avi"]
  
 init()
-
-
  
 def check_file(file):
     if file in os.listdir():
