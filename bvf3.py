@@ -23,7 +23,7 @@ def check_file(file):
         if ex in video_formats:
             return file
         else:
-            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be a valid video format." + Fore.RESET + Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"source file must be a supported video format ('.mp4', '.mov' and '.avi')." + Fore.RESET + Style.RESET_ALL)
     else:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
  
@@ -33,7 +33,7 @@ def check_extension(file):
     if ex in video_formats:
         return file
     else:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be a valid video format." + Fore.RESET + Style.RESET_ALL)
+        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be a supported video format ('.mp4', '.mov' and '.avi')." + Fore.RESET + Style.RESET_ALL)
  
 def create_video(args):
     print("\nCREATING VIDEO...")
