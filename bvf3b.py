@@ -14,6 +14,7 @@ frame_list = []
 check = True
 exaud = False
 video_formats = [".mp4",".mov",".avi"]
+stop = False
 
 init()
 
@@ -45,13 +46,13 @@ def create_video(args):
             for frame in tqdm(frame_list, unit='frames'):
                 out.write(frame)
                 
-                if keyboard.is_pressed(" "):
+                if stop == True:
                     print(Fore.YELLOW + Style.DIM + "\nVideo creation interrupted by space key." + Fore.RESET + Style.RESET_ALL)
                     break
 
             out.release()
 
-            if not keyboard.is_pressed(" "):
+            if stop == False:
                 vid = ffmpeg.input(temp_filename)
 
                 try:
@@ -87,16 +88,16 @@ def frames_editor(args):
         print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
         pbar = tqdm(total=int(n_frames), unit='frames')
         ret = True
-        while ret:
+        while ret and stop == False:
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
                 frame_list.append(edited_frame)
                 pbar.update(ret)
 
-                if keyboard.is_pressed(" "):
-                    print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by space key." + Fore.RESET + Style.RESET_ALL)
-                    break
+                #if keyboard.is_pressed(" "):
+                    #print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+                    #break
 
         cam.release()
         pbar.close()
@@ -116,8 +117,10 @@ def check_audio(file):
         return "No"
 
 def on_press(key):
+    global stop
     if key == keyboard.Key.space:
         print(Fore.YELLOW + Style.DIM + "\nProcess interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+        stop = True
         return False
 
 def app(args):
@@ -146,7 +149,7 @@ def app(args):
     listener.start()
 
     frames_editor(args)
-    if check == True and not keyboard.is_pressed(" "):
+    if check == True and stop == False:
         create_video(args)
 
 def main():
