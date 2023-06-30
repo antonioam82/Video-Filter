@@ -95,10 +95,6 @@ def frames_editor(args):
                 frame_list.append(edited_frame)
                 pbar.update(ret)
 
-                #if keyboard.is_pressed(" "):
-                    #print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by space key." + Fore.RESET + Style.RESET_ALL)
-                    #break
-
         cam.release()
         pbar.close()
 
