@@ -38,7 +38,7 @@ def check_extension(file):
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be a supported video format ('.mp4', '.mov' and '.avi')." + Fore.RESET + Style.RESET_ALL)
 
 def create_video(args):
-    print("\nCREATING VIDEO...")
+    print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
     try:
         with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
@@ -85,7 +85,7 @@ def frames_editor(args):
         if mute == False and exaud == False:
             audio = ffmp_input.audio
 
-        print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
+        print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]-PRESS SPACE BAR TO CANCEL-")
         pbar = tqdm(total=int(n_frames), unit='frames')
         ret = True
         while ret:
