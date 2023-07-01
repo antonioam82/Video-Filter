@@ -88,12 +88,16 @@ def frames_editor(args):
         print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]")
         pbar = tqdm(total=int(n_frames), unit='frames')
         ret = True
-        while ret and stop == False:
+        while ret:
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
                 frame_list.append(edited_frame)
                 pbar.update(ret)
+
+            if stop == True:
+                print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+                break
 
         cam.release()
         pbar.close()
@@ -115,7 +119,7 @@ def check_audio(file):
 def on_press(key):
     global stop
     if key == keyboard.Key.space:
-        print(Fore.YELLOW + Style.DIM + "\nProcess interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+        #print(Fore.YELLOW + Style.DIM + "\nProcess interrupted by space key." + Fore.RESET + Style.RESET_ALL)
         stop = True
         return False
 
