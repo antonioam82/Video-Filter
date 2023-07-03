@@ -39,18 +39,21 @@ def check_extension(file):
 
 def create_video(args):
     print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
+    pbar = tqdm(frame_list, unit='frames')#######
     try:
         with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
-            for frame in tqdm(frame_list, unit='frames'):
+            for frame in pbar:
                 out.write(frame)
                 
                 if stop == True:
                     print(Fore.YELLOW + Style.DIM + "\nVideo creation interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+                    pbar.disable = True
                     break
 
             out.release()
+            pbar.close()#######
 
             if stop == False:
                 vid = ffmpeg.input(temp_filename)
@@ -97,6 +100,7 @@ def frames_editor(args):
 
             if stop == True:
                 print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by space key." + Fore.RESET + Style.RESET_ALL)
+                pbar.disable = True
                 break
 
         cam.release()
