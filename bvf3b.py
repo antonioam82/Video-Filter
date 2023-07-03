@@ -140,7 +140,7 @@ def app(args):
 
     print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   1.2 \n" + Fore.RESET + Back.RESET)
 
-    print(Fore.YELLOW + "\n********************VIDEO INFO********************")
+    print(Fore.YELLOW + "\n********************VIDEO DATA********************")
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
     print(f'Frame Rate: {frame_rate}')
