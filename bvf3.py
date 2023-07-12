@@ -121,8 +121,6 @@ def add_contrast(fr):
     result = cv.LUT(fr, lookUpTable)
     return result
 
-
-
 def check_audio(file):
     global mute
     audio_probe = ffmpeg.probe(file, select_streams='a')
