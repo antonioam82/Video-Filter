@@ -3,7 +3,6 @@
 import cv2 as cv
 import ffmpeg
 import os
-import numpy as np
 from colorama import init, Fore, Back, Style
 from tqdm import tqdm
 import argparse
@@ -44,7 +43,7 @@ def create_video(args):
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
             print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
-            pbar = tqdm(frame_list, unit='frames')#######
+            pbar = tqdm(frame_list, unit='frames')
             for frame in pbar:
                 out.write(frame)
                 
@@ -96,8 +95,7 @@ def frames_editor(args):
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
-                contrast_frame = add_contrast(edited_frame)
-                frame_list.append(contrast_frame)
+                frame_list.append(edited_frame)
                 pbar.update(ret)
 
             if stop == True:
@@ -111,15 +109,6 @@ def frames_editor(args):
     except Exception as e:
         check = False
         print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
-
-def add_contrast(fr):
-    gamma = 1.5
-    lookUpTable = np.empty((1,256), np.uint8)
-    for i in range(256):
-        lookUpTable[0,i] = np.clip(pow(i / 255.0, gamma)*255.0, 0, 255)
-        
-    result = cv.LUT(fr, lookUpTable)
-    return result
 
 def check_audio(file):
     global mute
