@@ -150,7 +150,7 @@ def app(args):
     frame_rate = (video_streams[0]['avg_frame_rate'])
     audio_c = check_audio(args.source)
 
-    print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   1.2 \n" + Fore.RESET + Back.RESET)
+    print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   2.0 \n" + Fore.RESET + Back.RESET)
 
     print(Fore.YELLOW + "\n********************VIDEO DATA********************")
     print(f'SOURCE FILE: {args.source}')
