@@ -39,12 +39,12 @@ def check_extension(file):
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"result file must be a supported video format ('.mp4', '.mov' and '.avi')." + Fore.RESET + Style.RESET_ALL)
 
 def create_video(args):
-    print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
-    pbar = tqdm(frame_list, unit='frames')#######
     try:
         with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
+            print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
+            pbar = tqdm(frame_list, unit='frames')
             for frame in pbar:
                 out.write(frame)
                 
@@ -96,8 +96,11 @@ def frames_editor(args):
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
-                contrast_frame = add_contrast(edited_frame)
-                frame_list.append(contrast_frame)
+                if args.contrast != 0.0:
+                    result_frame = add_contrast(edited_frame,args.contrast)
+                else:
+                    result_frame = edited_frame
+                frame_list.append(result_frame)
                 pbar.update(ret)
 
             if stop == True:
@@ -112,8 +115,8 @@ def frames_editor(args):
         check = False
         print(Fore.RED + Style.DIM + "\n" + str(e) + Fore.RESET + Style.RESET_ALL)
 
-def add_contrast(fr):
-    gamma = 1.5
+def add_contrast(fr,g):
+    gamma = g #1.5
     lookUpTable = np.empty((1,256), np.uint8)
     for i in range(256):
         lookUpTable[0,i] = np.clip(pow(i / 255.0, gamma)*255.0, 0, 255)
@@ -177,6 +180,7 @@ def main():
     parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
     parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
+    parser.add_argument('-cont','--contrast',type=float, default=0.0, help='Gamma value for contrast effect')
 
     args = parser.parse_args()
     vid_name = args.destination
