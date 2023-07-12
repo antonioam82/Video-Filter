@@ -96,7 +96,7 @@ def frames_editor(args):
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
-                if args.contrast != 0.0:
+                if args.contrast > 0.0:
                     result_frame = add_contrast(edited_frame,args.contrast)
                 else:
                     result_frame = edited_frame
