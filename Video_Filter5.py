@@ -6,6 +6,8 @@ from tkinter import filedialog, messagebox
 import cv2 as cv
 import ffmpeg
 import numpy as np
+import sys
+from tempfile import NamedTemporaryFile
 import threading
 import os
  
@@ -48,7 +50,9 @@ class app:
         self.filter_method = ttk.Combobox(master=self.root,width=27)
         self.filter_method.place(x=710,y=210)
         self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored",
-                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)","sketched","normalize"]#"Filter2D (Bright)"
+                                      "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)","sketched","normalize",
+                                      "contrast1.5","contrast2.5"]
+        
         self.filter_method.set("Bilateral Filter")
  
         self.root.mainloop()
@@ -66,6 +70,7 @@ class app:
                 self.video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
                 self.nframes = (self.video_streams[0]['nb_frames'])
                 self.height = (self.video_streams[0]['height'])
+                self.width = (self.video_streams[0]['width'])
                 self.fr = (self.video_streams[0]['avg_frame_rate'])
                 self.check_audio()
                 self.vidName = (self.file).split("/")[-1]
@@ -78,11 +83,20 @@ class app:
     def check_audio(self):
         audio_probe = ffmpeg.probe(self.file, select_streams='a')
         if audio_probe['streams']:
-            print("El video contiene audio")
+            print("Audio stream: True")
             self.mute = False
         else:
-            print("El video no contine audio")
+            print("Audio stream: False")
             self.mute = True
+
+    def add_contrast(self,fr,g):
+        gamma = g #1.5
+        lookUpTable = np.empty((1,256), np.uint8)
+        for i in range(256):
+            lookUpTable[0,i] = np.clip(pow(i / 255.0, gamma)*255.0, 0, 255)
+        
+        result = cv.LUT(fr, lookUpTable)
+        return result
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -107,6 +121,11 @@ class app:
             edit = self.sketching(fr)
         elif self.filter_method.get() == "normalize":
             edit = cv.normalize(fr, None, alpha=0,beta=200, norm_type=cv.NORM_MINMAX)
+        elif self.filter_method.get() == "contrast1.5":
+            edit = self.add_contrast(fr, 1.5)
+        elif self.filter_method.get() == "contrast1.5":
+            edit = self.add_contrast(fr, 2.5)
+                
         return edit
  
     def cancel(self):
@@ -117,7 +136,7 @@ class app:
         self.prog_bar.step(0)
         self.counter = 0
  
-        self.frames_list = []
+        self.frames_list = []        
 
     def sketching(self,fr):
         gray = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
@@ -129,48 +148,35 @@ class app:
         return result
  
     def create_new_video(self):
-        frame_array = []
         self.counter = 0
         dif = 0
         size = ""
         if len(self.frames_list) > 0:
-            print(self.vid_name)
-            if os.path.split(self.vid_name)[1] in os.listdir():
-                os.remove(self.vid_name)
-            for i in self.frames_list:
-                if self.canceled == False:
-                    self.counter+=1
-                    height = i.shape[0]
-                    width = i.shape[1]
-                    size = (width,height)
+            output_filename = self.vid_name
+            if os.path.exists(output_filename):
+                os.remove(output_filename)
+            with NamedTemporaryFile(suffix=".mp4", delete=False) as temp_file:
+                temp_filename = temp_file.name
+                out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(self.fr), (self.width, self.height))
+                self.processLabel.configure(text="FINALIZING VIDEO...")
+                for frame in self.frames_list:
+                    if self.canceled == False:
+                        self.counter+=1
+                        out.write(frame)
+                        percent = self.counter*100/int(self.nframes)#
+                        self.prog_bar.step(percent-dif)#
+                        self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))#
+                        dif=percent#
  
-                    for k in range(1):
-                        frame_array.append(i)
- 
-                    percent = self.counter*100/int(self.nframes)
-                    self.prog_bar.step(percent-dif)
-                    self.processLabel.configure(text="CREATING VIDEO: {}%".format(int(percent)))
-                    dif=percent
- 
-            #name,ex = os.path.splitext(self.vidName)
- 
-            frame_rate = eval(self.fr)
-            out = cv.VideoWriter(self.Pfile,cv.VideoWriter_fourcc(*'XVID'), frame_rate, size)
-            print("CREATING VIDEO...")
-            print('FA:',len(frame_array))
-            self.processLabel.configure(text="FINALIZING VIDEO...")
-            for e in range(len(frame_array)):
-                out.write(frame_array[e])
- 
-            out.release()
-
-            vid = ffmpeg.input(self.Pfile)
-
-            if self.mute == False:
-                self.processLabel.configure(text="ADDING AUDIO...")
-                ffmpeg.output(self.audio,vid,self.vid_name).run()
-            else:
-                ffmpeg.output(vid,self.vid_name).run()
+                out.release()
+            if self.canceled == False:
+                vid = ffmpeg.input(temp_filename)
+              
+                if self.mute == False:
+                    self.processLabel.configure(text="ADDING AUDIO...")
+                    ffmpeg.output(self.audio,vid,self.vid_name).run()
+                else:
+                    ffmpeg.output(vid,self.vid_name).run()
  
         self.frames_list = []
  
@@ -178,12 +184,10 @@ class app:
         if self.file:
             self.vid_name = filedialog.asksaveasfilename(initialdir="/",
                             title="Save as",initialfile="filt_video.mp4",defaultextension='.mp4')
+            
             if self.vid_name:
-                
                 try:
                     directory = os.path.split(self.vid_name)[0]
-                    Pname, ex = os.path.splitext(self.vid_name)
-                    self.Pfile = Pname+"_.mp4"
                     os.chdir(directory)
                     self.btnStart.configure(state='disabled')
                     self.btnSearch.configure(state='disabled')
@@ -220,9 +224,6 @@ class app:
                     self.processLabel.configure(text="PROCESS: ENDED")
                     if self.vid_name and self.canceled == False:
                         messagebox.showinfo("TASK COMPLETED","Created video \'{}\'.".format(os.path.split(self.vid_name)[1]))
-
-                    if os.path.split(self.Pfile)[1] in os.listdir():
-                        os.remove(self.Pfile)
 
                 except Exception as e:
                     messagebox.showwarning("UNEXPECTED ERROR",str(e))
