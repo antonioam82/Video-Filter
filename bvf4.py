@@ -89,7 +89,7 @@ def frames_editor(args):
         if mute == False and exaud == False:
             audio = ffmp_input.audio
 
-        print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}]-PRESS SPACE BAR TO CANCEL-")
+        print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}|GamVal:{args.contrast}]-PRESS SPACE BAR TO CANCEL-")
         pbar = tqdm(total=int(n_frames), unit='frames')
         ret = True
         while ret:
