@@ -104,6 +104,7 @@ def frames_editor(args):
                 pbar.update(ret)
 
             if stop == True:
+                frame_list = []
                 print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
                 pbar.disable = True
                 break
