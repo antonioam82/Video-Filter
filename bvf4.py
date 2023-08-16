@@ -43,7 +43,7 @@ def create_video(args):
         with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
             out = cv.VideoWriter(temp_filename, cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
-            print("\nCREATING VIDEO...-PRESS SPACE BAR TO CANCEL-")
+            print("\nCREATING VIDEO -PRESS SPACE BAR TO CANCEL-")
             pbar = tqdm(frame_list, unit='frames')
             for frame in pbar:
                 out.write(frame)
@@ -89,7 +89,9 @@ def frames_editor(args):
         if mute == False and exaud == False:
             audio = ffmp_input.audio
 
-        print(f"PROCESSING FRAMES: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}|GamVal:{args.contrast}]-PRESS SPACE BAR TO CANCEL-")
+        print(f"USED PARAMS: [PixDiam:{args.pixel_diameter}|SigCol:{args.sigma_color}|SigSpc:{args.sigma_space}|GamVal:{args.contrast}]\n")
+
+        print(f"PROCESSING FRAMES -PRESS SPACE BAR TO CANCEL-")
         pbar = tqdm(total=int(n_frames), unit='frames')
         ret = True
         while ret:
@@ -175,7 +177,7 @@ def check_value(v):
         if float(v) >= 0.0:
             return float(v)
         else:
-            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + "Gamma value must be positive" + Fore.RESET + Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + "gamma value must be positive." + Fore.RESET + Style.RESET_ALL)
     except Exception as e:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
 
