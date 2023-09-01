@@ -10,6 +10,8 @@ import argparse
 from tempfile import NamedTemporaryFile
 import sys
 from pynput import keyboard
+import subprocess
+from pydub import AudioSegment
 
 frame_list = []
 check = True
@@ -96,6 +98,7 @@ def frames_editor(args):
         print("Ancho de los frames del vídeo: ",frame_w)
         frame_h = int(cam.get(cv.CAP_PROP_FRAME_HEIGHT))
         print("Alto de los frames del video: " + str(frame_h) + "\n")
+
         #####################################################################
         
         ffmp_input = ffmpeg.input(args.source)
@@ -142,13 +145,15 @@ def add_contrast(fr,g):
 
 def check_audio(file):
     global mute
-    audio_probe = ffmpeg.probe(file, select_streams='a')
-    if audio_probe['streams']:
+    try:
+        audio = AudioSegment.from_file(file)
         mute = False
-        return "Yes"
-    else:
+        print("SI TIENE AUDIO")
+    except Exception as e:
         mute = True
-        return "No"
+        print("NO TIENE AUDIO")
+        print(f"Error: {e}")
+ 
 
 def on_press(key):
     global stop
@@ -213,4 +218,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
