@@ -173,8 +173,8 @@ def app(args):
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}') #
     print(f'Frame Rate: {frame_rate}') #
-    print(f'Frames Width: {width}')
-    print(f'Frames Height: {height}')
+    print(f'Frames Width: {width}') #
+    print(f'Frames Height: {height}') #
     print(f'Audio Stream: {audio_c}')
     print("**************************************************\n" + Fore.RESET)
 
@@ -213,3 +213,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
