@@ -11,15 +11,21 @@ from tempfile import NamedTemporaryFile
 import sys
 from pynput import keyboard
 
-
 def main():
     parser = argparse.ArgumentParser(prog="bvf 0.1", description="Terminal video filter")
     parser.add_argument('-src', '--source', required=True, help='Source video')
-    parser.add_argument('-dest','--destination',default='output_video.mp4',help='Output video name')
+    parser.add_argument('-dest', '--destination', default='output_video.mp4', help='Output video name')
     parser.add_argument('-ea', '--exclude_audio', action='store_true', help='Exclude audio from processing')
-    parser.add_argument('-cont','--contrast', default=0.0, help='Gamma value for contrast effect')
-    parser.add_argument('-bf','--bilateral_filter',type=str,help='...')
-    parser.add_argument('-sharp','--sharp_filter',type=str,help='...')
+
+    mutually_exclusive_group = parser.add_mutually_exclusive_group()
+
+    mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
+    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', type=str, help='...')
+    mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
+    mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
+    mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
+    mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
+    
 
     args = parser.parse_args()
 
