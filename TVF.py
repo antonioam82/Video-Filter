@@ -11,6 +11,8 @@ from tempfile import NamedTemporaryFile
 import sys
 from pynput import keyboard
 
+init()
+
 def main():
     parser = argparse.ArgumentParser(prog="bvf 0.1", description="Terminal video filter")
     parser.add_argument('-src', '--source', required=True, help='Source video')
@@ -28,6 +30,9 @@ def main():
     
 
     args = parser.parse_args()
+
+    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative):
+        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg" + Fore.RESET + Style.RESET_ALL)
 
 if __name__ == '__main__':
     main()
