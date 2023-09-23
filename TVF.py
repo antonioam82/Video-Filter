@@ -9,6 +9,7 @@ from tqdm import tqdm
 import argparse
 from tempfile import NamedTemporaryFile
 import sys
+from pydub import AudioSegment
 #import concurrent_futures
 from pynput import keyboard
 
@@ -37,7 +38,35 @@ def check_file(file):
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
 
 def app(args):
+    global n_frames, frame_rate, height, width, audio
+    
+    cap = cv.VideoCapture(args.source)
+    n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
+    frame_rate = cap.get(cv.CAP_PROP_FPS)
+    width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
+    audio = check_audio(args.source)
+    
+    print("NUM_FRAMES: ",n_frames)
+    print("FRAME_RATE: ",frame_rate)
+    print("WIDTH: ",width)
+    print("HEIGHT: ",height)
+    print("AUDIO: ",audio)
+    
+    
     print('ok')
+
+def check_audio(file):
+    global mute
+    try:
+        audio = AudioSegment.from_file(file)
+        mute = False
+        return True
+    except Exception as e:
+        mute = True
+        print("NO TIENE AUDIO")
+        print(f"Error: {e}")
+        return False
 
 def main():
     global vid_name, exaud
