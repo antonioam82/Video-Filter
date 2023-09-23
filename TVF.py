@@ -52,9 +52,6 @@ def app(args):
     print("WIDTH: ",width)
     print("HEIGHT: ",height)
     print("AUDIO: ",audio)
-    
-    
-    print('ok')
 
 def check_audio(file):
     global mute
