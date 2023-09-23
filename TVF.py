@@ -15,6 +15,7 @@ from pynput import keyboard
 init()
 
 video_formats = [".mp4",".mov",".avi"]
+exaud = False
 
 def check_extension(file):
     global ex
