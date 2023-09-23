@@ -81,7 +81,6 @@ def main():
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
     
-
     args = parser.parse_args()
 
     if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative):
