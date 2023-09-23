@@ -53,6 +53,7 @@ def app(args):
     print("HEIGHT: ",height)
     print("AUDIO: ",audio)
 
+
 def check_audio(file):
     global mute
     try:
@@ -61,8 +62,6 @@ def check_audio(file):
         return True
     except Exception as e:
         mute = True
-        print("NO TIENE AUDIO")
-        print(f"Error: {e}")
         return False
 
 def main():
