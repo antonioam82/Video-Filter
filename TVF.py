@@ -52,6 +52,7 @@ def app(args):
 
     print(Fore.BLACK + Back.GREEN + "\n T E R M I N A L   V I D E O   F I L T E R   v: 1.0 \n" + Fore.RESET + Back.RESET)
     print(Fore.YELLOW + "\n*********************VIDEO DATA*********************")
+    print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
     print(f'Frame Rate: {frame_rate}')
     print(f'Frames Width: {width}')
