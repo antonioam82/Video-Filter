@@ -59,7 +59,6 @@ def app(args):
     print(f'Audio Stream: {audio}')
     print("****************************************************\n" + Fore.RESET)
 
-
 def check_audio(file):
     global mute
     try:
@@ -98,3 +97,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
