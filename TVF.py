@@ -46,12 +46,15 @@ def app(args):
     width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
     audio = check_audio(args.source)
-    
-    print("NUM_FRAMES: ",n_frames)
-    print("FRAME_RATE: ",frame_rate)
-    print("WIDTH: ",width)
-    print("HEIGHT: ",height)
-    print("AUDIO: ",audio)
+
+    print(Fore.BLACK + Back.GREEN + "\n T E R M I N A L   V I D E O   F I L T E R   v: 1.0 \n" + Fore.RESET + Back.RESET)
+    print(Fore.YELLOW + "\n*********************VIDEO DATA*********************")
+    print(f'Number of frames: {n_frames}')
+    print(f'Frame Rate: {frame_rate}')
+    print(f'Frames Width: {width}')
+    print(f'Frames Height: {height}')
+    print(f'Audio Stream: {audio}')
+    print("****************************************************\n" + Fore.RESET)
 
 
 def check_audio(file):
