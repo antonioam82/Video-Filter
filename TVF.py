@@ -85,6 +85,12 @@ def app(args):
             apply_filter(args,frame)
     print(len(frame_list))
     cap.release()
+    '''print("saving...")
+    counter = 1
+    for i in frame_list:
+        print(type(i))
+        cv.imwrite("frame"+str(counter)+".png",i)
+        counter += 1'''
     
 
 def check_audio(file):
