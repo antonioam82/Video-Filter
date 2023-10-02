@@ -40,6 +40,20 @@ def check_file(file):
     else:
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
 
+def negative(frame):
+    print("EDITING...")
+    width, height, deep = frame.shape
+
+    negative = np.zeros(frame.shape, frame.dtype)
+    for y in range(width):
+        for x in range(height):
+            for c in range(deep):
+                negative[y,x,c] = 255 - frame[y,x,c]
+    return negative
+
+def apply_filter(args):
+    pass
+
 def app(args):
     global n_frames, frame_rate, height, width, audio
     
@@ -59,6 +73,22 @@ def app(args):
     print(f'Frames Height: {height}')
     print(f'Audio Stream: {audio}')
     print("****************************************************\n" + Fore.RESET)
+
+
+    print(args.source)
+    cap = cv.VideoCapture(args.source)
+    ret = True
+
+    while ret:
+        ret, frame = cap.read()
+        if ret:
+            print(type(frame))
+            #img = cv.imread(frame)
+            edited_frame = negative(frame)
+            frame_list.append(edited_frame)
+        print(len(frame_list))
+    cap.release()
+    
 
 def check_audio(file):
     global mute
