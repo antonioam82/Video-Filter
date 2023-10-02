@@ -75,7 +75,6 @@ def app(args):
     print(f'Audio Stream: {audio}')
     print("****************************************************\n" + Fore.RESET)
 
-
     print(args.source)
     cap = cv.VideoCapture(args.source)
     ret = True
@@ -126,4 +125,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
