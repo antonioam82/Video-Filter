@@ -96,7 +96,7 @@ def app(args):
 
         if stop == True:
             print("stopped")##
-            frame_list = []
+            frame_list = []##
             print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
             break
     print(len(frame_list))
@@ -114,6 +114,7 @@ def check_audio(file):
     global mute
     try:
         audio = AudioSegment.from_file(file)
+        print(audio)
         mute = False
         return True
     except Exception as e:
