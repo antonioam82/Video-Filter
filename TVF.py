@@ -54,9 +54,15 @@ def apply_filter(args,fr):
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
     frame_list.append(edited_frame)
+
+def on_press(key):##
+    global stop
+    if key == keyboard.Key.space:
+        stop = True
+        return False
         
 def app(args):
-    global n_frames, frame_rate, height, width, audio
+    global n_frames, frame_rate, height, width, audio, frame_list
     
     cap = cv.VideoCapture(args.source)
     n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
@@ -76,6 +82,10 @@ def app(args):
     print("****************************************************\n" + Fore.RESET)
 
     print(args.source)
+
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()
+    
     cap = cv.VideoCapture(args.source)
     ret = True
     
@@ -83,16 +93,23 @@ def app(args):
         ret, frame = cap.read()
         if ret:
             apply_filter(args,frame)
+
+        if stop == True:
+            print("stopped")##
+            frame_list = []
+            print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
+            break
     print(len(frame_list))
     cap.release()
-    '''print("saving...")
-    counter = 1
-    for i in frame_list:
-        print(type(i))
-        cv.imwrite("frame"+str(counter)+".png",i)
-        counter += 1'''
     
-
+    '''if len(frame_list) > 0:
+        print("saving...")
+        counter = 1
+        for i in frame_list:
+            print(type(i))
+            cv.imwrite("frame"+str(counter)+".png",i)
+            counter += 1'''
+    
 def check_audio(file):
     global mute
     try:
