@@ -53,6 +53,9 @@ def apply_filter(args,fr):
     if args.negative:
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
+    if args.bilateral_filter:
+        edited_frame = cv.bilateralFilter(fr,int(args.bilateral_filter[0]),int(args.bilateral_filter[1]),
+                                          int(args.bilateral_filter[2]))
     frame_list.append(edited_frame)
 
 def on_press(key):##
@@ -102,13 +105,13 @@ def app(args):
     print(len(frame_list))
     cap.release()
     
-    '''if len(frame_list) > 0:
+    if len(frame_list) > 0:
         print("saving...")
         counter = 1
         for i in frame_list:
             print(type(i))
             cv.imwrite("frame"+str(counter)+".png",i)
-            counter += 1'''
+            counter += 1
     
 def check_audio(file):
     global mute
@@ -131,7 +134,7 @@ def main():
     mutually_exclusive_group = parser.add_mutually_exclusive_group()
 
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
-    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', type=str, help='...')
+    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=str, help='...')
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
