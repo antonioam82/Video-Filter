@@ -104,13 +104,13 @@ def app(args):
     print(len(frame_list))
     cap.release()
     
-    if len(frame_list) > 0:
+    '''if len(frame_list) > 0:
         print("saving...")
         counter = 1
         for i in frame_list:
             print(type(i))
             cv.imwrite("frame"+str(counter)+".png",i)
-            counter += 1
+            counter += 1'''
     
 def check_audio(file):
     global mute
