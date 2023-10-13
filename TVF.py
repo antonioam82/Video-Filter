@@ -54,8 +54,7 @@ def apply_filter(args,fr):
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
     if args.bilateral_filter:
-        edited_frame = cv.bilateralFilter(fr,int(args.bilateral_filter[0]),int(args.bilateral_filter[1]),
-                                          int(args.bilateral_filter[2]))
+        edited_frame = cv.bilateralFilter(fr,args.bilateral_filter[0],args.bilateral_filter[1],args.bilateral_filter[2])
     frame_list.append(edited_frame)
 
 def on_press(key):##
@@ -134,7 +133,7 @@ def main():
     mutually_exclusive_group = parser.add_mutually_exclusive_group()
 
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
-    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=str, help='...')
+    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=int, help='...')
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
