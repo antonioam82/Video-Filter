@@ -185,7 +185,7 @@ def main():
     global vid_name, exaud
     parser = argparse.ArgumentParser(prog="bvf 1.2", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
     parser.add_argument('-src', '--source', required=True, type=check_file, help='Source video')
-    parser.add_argument('-dest', '--destination', default="NewFilteredVid.mp4", type=check_extension, help='Destination video')
+    parser.add_argument('-dest', '--destination', default="output_video.mp4", type=check_extension, help='Destination video')
     parser.add_argument('-ea', '--exclude_audio', action='store_true', help='Exclude audio from processing')
     parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
