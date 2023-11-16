@@ -51,7 +51,7 @@ class app:
         self.filter_method.place(x=710,y=210)
         self.filter_method["values"]=["Bilateral Filter","Mean Shift Filtering","Blur","Median Blur","fastNlMeansDenoisingColored",
                                       "Filter2D Bright","Filter2D Sharpening","pyrDown","resize (128x720)","sketched","normalize",
-                                      "contrast1.5","contrast2.5"]
+                                      "contrast1.5","contrast2.5",'CRT']
         
         self.filter_method.set("Bilateral Filter")
  
@@ -97,6 +97,17 @@ class app:
         
         result = cv.LUT(fr, lookUpTable)
         return result
+
+    def apply_crt_effect(self,fr):
+        #resized = cv.resize(fr, None, fx=0.5, fy=0.5, interpolation=cv.INTER_LINEAR)
+        blur = cv.GaussianBlur(fr, (5,5), 0)
+        num_iterations = 5
+        for _ in range(num_iterations):
+            for i in range(0, len(blur), 2):
+                blur[i] = np.roll(blur[i], 1)
+            for i in range(0, len(blur[0]), 2):
+                blur[:, i] = np.roll(blur[:, i], 1)
+        return blur
  
     def aply_method(self,fr):
         if self.filter_method.get() == "Bilateral Filter":
@@ -125,6 +136,9 @@ class app:
             edit = self.add_contrast(fr, 1.5)
         elif self.filter_method.get() == "contrast1.5":
             edit = self.add_contrast(fr, 2.5)
+        elif self.filter_method.get() == "CRT":
+            edit = self.apply_crt_effect(fr)
+            
                 
         return edit
  
