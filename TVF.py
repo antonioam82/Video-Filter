@@ -137,6 +137,7 @@ def main():
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
+    mutually_exclusive_group.add_argumant('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
     
     args = parser.parse_args()
