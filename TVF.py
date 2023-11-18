@@ -167,7 +167,7 @@ def main():
     args = parser.parse_args()
 
     if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative or args.cathode_ray_tube):
-        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg" + Fore.RESET + Style.RESET_ALL)
+        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg, -crt" + Fore.RESET + Style.RESET_ALL)
     else:
         vid_name = args.destination
         if args.exclude_audio:
