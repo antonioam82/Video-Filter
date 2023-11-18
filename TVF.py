@@ -49,19 +49,36 @@ def negative_filter(negative,frame):
                 negative[y,x,c] = 255 - frame[y,x,c]
     return negative
 
+# APLICACION DE FILTROS
 def apply_filter(args,fr):
     if args.negative:
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
     if args.bilateral_filter:
         edited_frame = cv.bilateralFilter(fr,args.bilateral_filter[0],args.bilateral_filter[1],args.bilateral_filter[2])
+    if args.cathode_ray_tube:
+        edited_frame = apply_crt_effect(fr)
+         
     frame_list.append(edited_frame)
+    
+        
 
 def on_press(key):##
     global stop
     if key == keyboard.Key.space:
         stop = True
         return False
+
+def apply_crt_effect(fr):
+        blur = cv.GaussianBlur(fr, (5,5), 0)
+        for _ in range(5):
+            for i in range(0, len(blur), 2):
+                blur[i] = np.roll(blur[i], 1)
+            for i in range(0, len(blur[0]), 2):
+                blur[:, i] = np.roll(blur[:, i], 1)
+        
+        return blur
+    
         
 def app(args):
     global n_frames, frame_rate, height, width, audio, frame_list
@@ -137,7 +154,7 @@ def main():
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
-    mutually_exclusive_group.add_argumant('-crt', '--cathode_ray_tube', action='store_true',help='...')
+    mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
     
     args = parser.parse_args()
@@ -152,3 +169,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
