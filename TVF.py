@@ -41,7 +41,6 @@ def check_file(file):
         raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + f"file '{file}' not found." + Fore.RESET + Style.RESET_ALL)
 
 def negative_filter(negative,frame):
-    print("EDITING...")
     width, height, deep = frame.shape
     for y in range(width):
         for x in range(height):
@@ -60,9 +59,8 @@ def apply_filter(args,fr):
         edited_frame = apply_crt_effect(fr)
          
     frame_list.append(edited_frame)
-    
-        
 
+    
 def on_press(key):##
     global stop
     if key == keyboard.Key.space:
@@ -70,7 +68,6 @@ def on_press(key):##
         return False
 
 def apply_crt_effect(fr):
-    print("WORKING...")
     blur = cv.GaussianBlur(fr, (5,5), 0)
     for _ in range(5):
         for i in range(0, len(blur), 2):
@@ -108,19 +105,26 @@ def app(args):
     
     cap = cv.VideoCapture(args.source)
     ret = True
+
+    print(f"PROCESSING FRAMES -PRESS SPACE BAR TO CANCEL-")
+    pbar = tqdm(total=int(n_frames), unit='frames')
     
     while ret:
         ret, frame = cap.read()
         if ret:
             apply_filter(args,frame)
+            pbar.update(ret)
 
         if stop == True:
-            print("stopped")##
-            #frame_list = []##
+            #print("stopped")##
+            frame_list = []##
             print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
+            pbar.disable = True
             break
+        
     print(len(frame_list))
     cap.release()
+    pbar.close()
 
     # ___________________________________________________________
     '''if len(frame_list) > 0:
