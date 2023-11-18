@@ -122,9 +122,9 @@ def app(args):
             pbar.disable = True
             break
         
-    print(len(frame_list))
     cap.release()
     pbar.close()
+    
 
     # ___________________________________________________________
     '''if len(frame_list) > 0:
