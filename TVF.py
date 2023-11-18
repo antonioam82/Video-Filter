@@ -70,14 +70,15 @@ def on_press(key):##
         return False
 
 def apply_crt_effect(fr):
-        blur = cv.GaussianBlur(fr, (5,5), 0)
-        for _ in range(5):
-            for i in range(0, len(blur), 2):
-                blur[i] = np.roll(blur[i], 1)
-            for i in range(0, len(blur[0]), 2):
-                blur[:, i] = np.roll(blur[:, i], 1)
+    print("WORKING...")
+    blur = cv.GaussianBlur(fr, (5,5), 0)
+    for _ in range(5):
+        for i in range(0, len(blur), 2):
+            blur[i] = np.roll(blur[i], 1)
+        for i in range(0, len(blur[0]), 2):
+            blur[:, i] = np.roll(blur[:, i], 1)
         
-        return blur
+    return blur
     
         
 def app(args):
@@ -115,12 +116,13 @@ def app(args):
 
         if stop == True:
             print("stopped")##
-            frame_list = []##
+            #frame_list = []##
             print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
             break
     print(len(frame_list))
     cap.release()
-    
+
+    # ___________________________________________________________
     '''if len(frame_list) > 0:
         print("saving...")
         counter = 1
@@ -128,6 +130,7 @@ def app(args):
             print(type(i))
             cv.imwrite("frame"+str(counter)+".png",i)
             counter += 1'''
+    #_____________________________________________________________
     
 def check_audio(file):
     global mute
@@ -159,7 +162,7 @@ def main():
     
     args = parser.parse_args()
 
-    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative):
+    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative or args.cathode_ray_tube):
         parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg" + Fore.RESET + Style.RESET_ALL)
     else:
         vid_name = args.destination
