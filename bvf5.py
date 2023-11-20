@@ -167,24 +167,6 @@ def app(args):
     if check == True and stop == False:
         create_video(args)
 
-def check_value(v):
-    print(v)
-    try:
-        if float(v) >= -2000.0:
-            return float(v)
-        else:
-            raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + "gamma value must be positive." + Fore.RESET + Style.RESET_ALL)
-    except Exception as e:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
-
-def check_value(v):
-    print(v)
-    try:
-        return float(v)
-            
-    except Exception as e:
-        raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + str(e) + Fore.RESET + Style.RESET_ALL)
-
 def main():
     global vid_name, exaud
     parser = argparse.ArgumentParser(prog="bvf 1.2", description="Bilateral video filter on CLI", epilog='REPO: https://github.com/antonioam82/Video-Filter')
@@ -194,7 +176,7 @@ def main():
     parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
     parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
-    parser.add_argument('-cont','--contrast',type=check_value, default=1.0, help='Gamma value for contrast effect')
+    parser.add_argument('-cont','--contrast',type=float, default=1.0, help='Gamma value for contrast effect')
     parser.add_argument('-bri','--brightness',type=float,default=0.0,help='Beta value for brightness')
 
     args = parser.parse_args()
