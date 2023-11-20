@@ -99,7 +99,8 @@ class app:
         return result
 
     def apply_crt_effect(self,fr):
-        #resized = cv.resize(fr, None, fx=0.5, fy=0.5, interpolation=cv.INTER_LINEAR)
+        #
+        
         blur = cv.GaussianBlur(fr, (5,5), 0)
         num_iterations = 5
         for _ in range(num_iterations):
@@ -107,6 +108,7 @@ class app:
                 blur[i] = np.roll(blur[i], 1)
             for i in range(0, len(blur[0]), 2):
                 blur[:, i] = np.roll(blur[:, i], 1)
+        
         return blur
  
     def aply_method(self,fr):
@@ -134,7 +136,7 @@ class app:
             edit = cv.normalize(fr, None, alpha=0,beta=200, norm_type=cv.NORM_MINMAX)
         elif self.filter_method.get() == "contrast1.5":
             edit = self.add_contrast(fr, 1.5)
-        elif self.filter_method.get() == "contrast1.5":
+        elif self.filter_method.get() == "contrast2.5":
             edit = self.add_contrast(fr, 2.5)
         elif self.filter_method.get() == "CRT":
             edit = self.apply_crt_effect(fr)
