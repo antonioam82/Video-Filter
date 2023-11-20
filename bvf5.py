@@ -98,7 +98,7 @@ def frames_editor(args):
             ret, frame = cam.read()
             if ret:
                 edited_frame = cv.bilateralFilter(frame, args.pixel_diameter, args.sigma_color, args.sigma_space)
-                if args.contrast > 0.0 or args.brightness > 0.0:
+                if args.contrast != 0.0 or args.brightness != 0.0:
                     result_frame = add_contrast(edited_frame,args.contrast,args.brightness)
                 else:
                     result_frame = edited_frame
@@ -168,8 +168,9 @@ def app(args):
         create_video(args)
 
 def check_value(v):
+    print(v)
     try:
-        if float(v) >= 0.0:
+        if float(v) >= -2000.0:
             return float(v)
         else:
             raise argparse.ArgumentTypeError(Fore.RED + Style.BRIGHT + "gamma value must be positive." + Fore.RESET + Style.RESET_ALL)
@@ -193,7 +194,7 @@ def main():
     parser.add_argument('-pd', '--pixel_diameter', type=int, default=9, help='Pixel diameter [Default: 9]')
     parser.add_argument('-sgc', '--sigma_color', type=float, default=75, help='Sigma color value [Default: 75]')
     parser.add_argument('-sgs', '--sigma_space', type=float, default=75, help='Sigma space value [Default: 75]')
-    parser.add_argument('-cont','--contrast',type=check_value, default=0.0, help='Gamma value for contrast effect')
+    parser.add_argument('-cont','--contrast',type=check_value, default=1.0, help='Gamma value for contrast effect')
     parser.add_argument('-bri','--brightness',type=float,default=0.0,help='Beta value for brightness')
 
     args = parser.parse_args()
