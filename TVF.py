@@ -50,7 +50,6 @@ def negative_filter(negative,frame):
 
 # APLICACION DE FILTROS
 def apply_filter(args,fr):
-    global frame_list
     if args.negative:
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
@@ -60,6 +59,8 @@ def apply_filter(args,fr):
         edited_frame = apply_crt_effect(fr)
     if args.distorsed:
         edited_frame = apply_distorsed_effect(fr)
+    if args.canny:
+        edited_frame = apply_border_detection(fr)
          
     frame_list.append(edited_frame)
 
@@ -90,8 +91,12 @@ def apply_crt_effect(fr):
             blur[:, i] = np.roll(blur[:, i], 1)
         
     return blur
-    
-        
+
+def apply_border_detection(fr):
+    #img = cv.imread(fr, 0)
+    edges = cv.Canny(fr, 100, 200)
+    return edges
+   
 def app(args):
     global n_frames, frame_rate, height, width, audio, frame_list
     
