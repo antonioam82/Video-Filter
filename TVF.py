@@ -54,14 +54,15 @@ def apply_filter(args,fr):
     if args.negative:
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
-    if args.bilateral_filter:
+    elif args.bilateral_filter:
         edited_frame = cv.bilateralFilter(fr,args.bilateral_filter[0],args.bilateral_filter[1],args.bilateral_filter[2])
-    if args.cathode_ray_tube:
+    elif args.cathode_ray_tube:
         edited_frame = apply_crt_effect(fr)
-    if args.distorsed:
+    elif args.distorsed:
         edited_frame = apply_distorsed_effect(fr)
-    if args.canny:
+    elif args.canny:
         edited_frame = apply_border_detection(fr)
+    # TO DO: sketct method, sharp method and blur mathod
          
     frame_list.append(edited_frame)
 
