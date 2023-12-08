@@ -20,6 +20,7 @@ frame_list = []
 video_formats = [".mp4",".mov",".avi"]
 exaud = False
 stop = False
+check = True
 
 def check_extension(file):
     global ex
@@ -97,7 +98,7 @@ def apply_border_detection(fr):
     return edges
    
 def app(args):
-    global n_frames, frame_rate, height, width, audio, frame_list
+    global n_frames, frame_rate, height, width, audio, frame_list, check
     
     cap = cv.VideoCapture(args.source)
     n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
@@ -126,21 +127,30 @@ def app(args):
 
     print(f"PROCESSING FRAMES -PRESS SPACE BAR TO CANCEL-")
     pbar = tqdm(total=int(n_frames), unit='frames')
-    
-    while ret:
-        ret, frame = cap.read()
-        if ret:
-            apply_filter(args,frame)
-            pbar.update(ret)
+    try:
+        while ret:
+            ret, frame = cap.read()
+            if ret:
+                apply_filter(args,frame)
+                pbar.update(ret)
 
-        if stop == True:
-            #frame_list = []##
-            print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
-            pbar.disable = True
-            break
+            if stop == True:
+                frame_list = []##
+                check = False
+                print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
+                pbar.disable = True
+                break
+    except Exception as e:
+        check = False
+        print(Fore.RED + Style.BRIGHT +'\nUnexpected error: ',str(e)+ Fore.RESET + Style.RESET_ALL)
         
     cap.release()
     pbar.close()
+
+    if check == True:
+        print("TO BE CONTINUED...")
+    else:
+        print("END")
 
     # ___________________________________________________________
     '''if len(frame_list) > 0:
