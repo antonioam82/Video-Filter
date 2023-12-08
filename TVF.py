@@ -177,11 +177,13 @@ def main():
     mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-dist','--distorsed',action='store_true', help='Apply distorsed effect on video.')
+    mutually_exclusive_group.add_argument('-can','--canny',action='store_true', help='Get borders.')
     
     args = parser.parse_args()
 
-    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative or args.cathode_ray_tube or args.distorsed):
-        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg, -crt" + Fore.RESET + Style.RESET_ALL)
+    filters = [args.bilateral_filter, args.sharp_filter, args.blur, args.sketch, args.negative, args.cathode_ray_tube, args.distorsed, args.canny]
+    if not any(filters):
+        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg, -crt, -dist, -can" + Fore.RESET + Style.RESET_ALL)
     else:
         vid_name = args.destination
         if args.exclude_audio:
