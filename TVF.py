@@ -50,6 +50,7 @@ def negative_filter(negative,frame):
 
 # APLICACION DE FILTROS
 def apply_filter(args,fr):
+    global frame_list
     if args.negative:
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
@@ -57,10 +58,23 @@ def apply_filter(args,fr):
         edited_frame = cv.bilateralFilter(fr,args.bilateral_filter[0],args.bilateral_filter[1],args.bilateral_filter[2])
     if args.cathode_ray_tube:
         edited_frame = apply_crt_effect(fr)
+    if args.distorsed:
+        edited_frame = apply_distorsed_effect(fr)
          
     frame_list.append(edited_frame)
 
+def apply_distorsed_effect(fr):
+    rows, cols = fr.shape[:2]
+    map_x = np.zeros(fr.shape[:2], np.float32)
+    map_y = np.zeros(fr.shape[:2], np.float32)
+    for i in range(rows):
+        for j in range(cols):
+            map_x[i, j] = j + 10 * np.sin(i / 10)
+            map_y[i, j] = i + 10 * np.sin(j / 10)
+    distorsed_img = cv.remap(fr, map_x, map_y, interpolation=cv.INTER_LINEAR)
     
+    return distorsed_img
+
 def on_press(key):##
     global stop
     if key == keyboard.Key.space:
@@ -117,14 +131,13 @@ def app(args):
 
         if stop == True:
             #print("stopped")##
-            frame_list = []##
+            #frame_list = []##
             print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
             pbar.disable = True
             break
         
     cap.release()
     pbar.close()
-    
 
     # ___________________________________________________________
     '''if len(frame_list) > 0:
@@ -163,10 +176,11 @@ def main():
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
+    mutually_exclusive_group.add_argument('-dist','--distorsed',action='store_true', help='Apply distorsed effect on video.')
     
     args = parser.parse_args()
 
-    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative or args.cathode_ray_tube):
+    if not (args.bilateral_filter or args.sharp_filter or args.blur or args.sketch or args.negative or args.cathode_ray_tube or args.distorsed):
         parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg, -crt" + Fore.RESET + Style.RESET_ALL)
     else:
         vid_name = args.destination
