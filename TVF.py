@@ -93,7 +93,6 @@ def apply_crt_effect(fr):
     return blur
 
 def apply_border_detection(fr):
-    #img = cv.imread(fr, 0)
     edges = cv.Canny(fr, 100, 200)
     return edges
    
@@ -135,7 +134,6 @@ def app(args):
             pbar.update(ret)
 
         if stop == True:
-            #print("stopped")##
             #frame_list = []##
             print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
             pbar.disable = True
