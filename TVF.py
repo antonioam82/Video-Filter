@@ -49,6 +49,14 @@ def negative_filter(negative,frame):
                 negative[y,x,c] = 255 - frame[y,x,c]
     return negative
 
+def apply_sketch_effect(fr):
+    gray_image = cv.cvtColor(fr,cv.COLOR_BGR2GRAY)
+    inver = 255 - gray_image
+    blurred = cv.GaussianBlur(inver, (21,21),0)
+    inver_blur = 255 - blurred
+    sketched = cv.divide(gray_image,inver_blur,scale = 256.0)
+    return sketched
+
 # APLICACION DE FILTROS
 def apply_filter(args,fr):
     if args.negative:
@@ -62,6 +70,9 @@ def apply_filter(args,fr):
         edited_frame = apply_distorsed_effect(fr)
     elif args.canny:
         edited_frame = apply_border_detection(fr)
+    elif args.sketch:
+        edited_frame = apply_sketch_effect(fr)
+        
     # TO DO: sketct method, sharp method and blur mathod
          
     frame_list.append(edited_frame)
