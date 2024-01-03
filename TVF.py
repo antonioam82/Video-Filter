@@ -72,8 +72,10 @@ def apply_filter(args,fr):
         edited_frame = apply_border_detection(fr)
     elif args.sketch:
         edited_frame = apply_sketch_effect(fr)
+    elif args.blur:
+        edited_frame = cv.blur(fr,(5,5))
         
-    # TO DO: sketct method, sharp method and blur mathod
+    # TO DO:sharp method and blur mathod
          
     frame_list.append(edited_frame)
 
@@ -147,7 +149,7 @@ def app(args):
                 pbar.update(ret)
 
             if stop == True:
-                frame_list = []##
+                #frame_list = []#############################################################
                 check = False
                 print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
                 pbar.disable = True
@@ -165,13 +167,13 @@ def app(args):
         print("END")
 
     # ___________________________________________________________
-    '''if len(frame_list) > 0:
+    if len(frame_list) > 0:
         print("saving...")
         counter = 1
         for i in frame_list:
-            print(type(i))
+            print(i)
             cv.imwrite("frame"+str(counter)+".png",i)
-            counter += 1'''
+            counter += 1
     #_____________________________________________________________
     
 def check_audio(file):
@@ -197,7 +199,7 @@ def main():
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
     mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=int, help='...')
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
-    mutually_exclusive_group.add_argument('-blr', '--blur', type=str, help='...')
+    mutually_exclusive_group.add_argument('-blr', '--blur', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
