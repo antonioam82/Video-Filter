@@ -4,7 +4,7 @@ import cv2 as cv
 import ffmpeg
 import os
 import numpy as np
-from colorama import init, Fore, Style, Back
+from colorama import init, Fore, Style
 from tqdm import tqdm
 import argparse
 from tempfile import NamedTemporaryFile
@@ -157,16 +157,16 @@ def app(args):
     #print(Fore.GREEN + "\n__________________________________________________")
     print(Fore.GREEN + "\n----------------------------------------------------")
     print("| B I L A T E R A L  V I D E O   F I L T E R   2.0 |")
-    print("----------------------------------------------------\n" + Fore.RESET)
+    print("----------------------------------------------------" + Fore.RESET)
 
-    print(Fore.YELLOW + "\n********************VIDEO DATA********************")
+    print(Fore.YELLOW + "\n*********************VIDEO DATA*********************")
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
     print(f'Frame Rate: {frame_rate}')
     print(f'Frames Width: {width}')
     print(f'Frames Height: {height}')
     print(f'Audio Stream: {audio_c}')
-    print("**************************************************\n" + Fore.RESET)
+    print("****************************************************\n" + Fore.RESET)
 
     listener = keyboard.Listener(on_press=on_press)
     listener.start()
