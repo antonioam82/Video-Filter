@@ -4,7 +4,7 @@ import cv2 as cv
 import ffmpeg
 import os
 import numpy as np
-from colorama import init, Fore, Back, Style
+from colorama import init, Fore, Style, Back
 from tqdm import tqdm
 import argparse
 from tempfile import NamedTemporaryFile
@@ -154,7 +154,10 @@ def app(args):
     frame_rate = (video_streams[0]['avg_frame_rate'])
     audio_c = check_audio(args.source)
 
-    print(Fore.BLACK + Back.GREEN + "\n B I L A T E R A L  V I D E O   F I L T E R   2.0 \n" + Fore.RESET + Back.RESET)
+    #print(Fore.GREEN + "\n__________________________________________________")
+    print(Fore.GREEN + "\n----------------------------------------------------")
+    print("| B I L A T E R A L  V I D E O   F I L T E R   2.0 |")
+    print("----------------------------------------------------\n" + Fore.RESET)
 
     print(Fore.YELLOW + "\n********************VIDEO DATA********************")
     print(f'SOURCE FILE: {args.source}')
