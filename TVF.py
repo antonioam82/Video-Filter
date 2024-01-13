@@ -26,8 +26,11 @@ def create_video(args):
     try:
         vid_name = args.destination
         Pname, ex = os.path.splitext(vid_name)
+        Pfile = Pname+"_mp4"
+        
         print("Nombre Video: ", Pname)
         print("Extension: ", ex)
+        out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
         
     except Exception as e:
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
@@ -128,7 +131,7 @@ def app(args):
     
     cap = cv.VideoCapture(args.source)
     n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
-    frame_rate = cap.get(cv.CAP_PROP_FPS)
+    frame_rate = str(cap.get(cv.CAP_PROP_FPS))
     width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
     audio = check_audio(args.source)
