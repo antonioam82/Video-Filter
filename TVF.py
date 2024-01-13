@@ -22,6 +22,16 @@ exaud = False
 stop = False
 check = True
 
+def create_video(args):
+    try:
+        vid_name = args.destination
+        Pname, ex = os.path.splitext(vid_name)
+        print("Nombre Video: ", Pname)
+        print("Extension: ", ex)
+        
+    except Exception as e:
+        print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
+
 def check_extension(file):
     global ex
     name, ex = os.path.splitext(file)
@@ -74,6 +84,8 @@ def apply_filter(args,fr):
         edited_frame = apply_sketch_effect(fr)
     elif args.blur:
         edited_frame = cv.blur(fr,(5,5))
+    elif args.median_blur:
+        edited_frame = cv.medianBlur(fr,3)
         
     # TO DO:sharp method and blur mathod
          
@@ -121,7 +133,7 @@ def app(args):
     height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
     audio = check_audio(args.source)
 
-    print(Fore.BLACK + Back.GREEN + "\n T E R M I N A L   V I D E O   F I L T E R   v: 1.0 \n" + Fore.RESET + Back.RESET)
+    print(Fore.BLACK + Back.GREEN + "\n T E R M I N A L   V I D E O   F I L T E R   v: 1.0 " + Fore.RESET + Back.RESET)
     print(Fore.YELLOW + "\n*********************VIDEO DATA*********************")
     print(f'SOURCE FILE: {args.source}')
     print(f'Number of frames: {n_frames}')
@@ -149,11 +161,12 @@ def app(args):
                 pbar.update(ret)
 
             if stop == True:
-                #frame_list = []#############################################################
+                frame_list = []##
                 check = False
                 print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
                 pbar.disable = True
                 break
+            
     except Exception as e:
         check = False
         print(Fore.RED + Style.BRIGHT +'\nUnexpected error: ',str(e)+ Fore.RESET + Style.RESET_ALL)
@@ -162,18 +175,18 @@ def app(args):
     pbar.close()
 
     if check == True:
-        print("TO BE CONTINUED...")
+        create_video(args)
     else:
         print("END")
 
     # ___________________________________________________________
-    if len(frame_list) > 0:
+    '''if len(frame_list) > 0:
         print("saving...")
         counter = 1
         for i in frame_list:
             print(i)
             cv.imwrite("frame"+str(counter)+".png",i)
-            counter += 1
+            counter += 1'''
     #_____________________________________________________________
     
 def check_audio(file):
@@ -200,6 +213,7 @@ def main():
     mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=int, help='...')
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', action='store_true', help='...')
+    mutually_exclusive_group.add_argument('-mblr', '--median_blur', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
@@ -208,9 +222,9 @@ def main():
     
     args = parser.parse_args()
 
-    filters = [args.bilateral_filter, args.sharp_filter, args.blur, args.sketch, args.negative, args.cathode_ray_tube, args.distorsed, args.canny]
+    filters = [args.bilateral_filter, args.sharp_filter, args.blur, args.sketch, args.negative, args.cathode_ray_tube, args.distorsed, args.canny, args.median_blur]
     if not any(filters):
-        parser.error(Fore.RED + Style.BRIGHT + "You must specify a filter function: -bf, -sharp, -blr, -skt, -neg, -crt, -dist, -can" + Fore.RESET + Style.RESET_ALL)
+        parser.error(Fore.RED + Style.BRIGHT + "You must specify a valid filter method: Type '-h' for details" + Fore.RESET + Style.RESET_ALL)
     else:
         vid_name = args.destination
         if args.exclude_audio:
