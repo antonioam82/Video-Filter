@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import cv2 as cv
-import ffmpeg
+#import ffmpeg
 import os
 import numpy as np
 from colorama import init, Fore, Back, Style
@@ -236,4 +236,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
