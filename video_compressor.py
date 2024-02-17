@@ -1,4 +1,4 @@
- import ffmpeg
+import ffmpeg
 import argparse
 from colorama import init, Back, Fore, Style
 import pathlib
@@ -10,11 +10,17 @@ def check_source(file):
     file_extension = pathlib.Path(file).suffix
     if file in os.listdir():
         if file_extension != '.mp4':
-            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"Enter an 'mp4' video format."+Fore.RESET+Style.RESET_ALL)
+            raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"Enter a 'mp4' video format ('{file_extension}' is not valid)."+Fore.RESET+Style.RESET_ALL)
         else:
             return file
     else:
         raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"FILE NOT FOUND: File '{file}' not found."+Fore.RESET+Style.RESET_ALL)
+
+'''def check_val_range(n):
+    if n in range(0,52):
+        return n
+    else:
+        raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"FILE NOT FOUND: File '{file}' not found."+Fore.RESET+Style.RESET_ALL)'''
     
 
 def video_compression(source, output, quality, codec, preset):
