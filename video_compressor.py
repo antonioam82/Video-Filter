@@ -1,4 +1,4 @@
- import ffmpeg
+import ffmpeg
 import argparse
 from colorama import init, Back, Fore, Style
 import pathlib
