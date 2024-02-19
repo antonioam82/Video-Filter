@@ -1,4 +1,4 @@
-import ffmpeg
+ import ffmpeg
 import argparse
 from colorama import init, Back, Fore, Style
 import pathlib
@@ -16,11 +16,11 @@ def check_source(file):
     else:
         raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"FILE NOT FOUND: File '{file}' not found."+Fore.RESET+Style.RESET_ALL)
 
-'''def check_val_range(n):
+def check_val_range(n):
     if n in range(0,52):
         return n
     else:
-        raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"FILE NOT FOUND: File '{file}' not found."+Fore.RESET+Style.RESET_ALL)'''
+        raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"VALUE OUT OF RANGE: Quality value must be in range 0 to 51."+Fore.RESET+Style.RESET_ALL)
     
 
 def video_compression(source, output, quality, codec, preset):
@@ -43,7 +43,7 @@ def main():
                                      epilog = "REPO: https://github.com/antonioam82/Video-Filter/blob/main/video_compressor.py")
     parser.add_argument('-src','--source',required=True,type=check_source,help='Source file name')
     parser.add_argument('-dest','--destination',default='compessed_video.mp4',type=str,help="Output video name")
-    parser.add_argument('-qlt','--quality',type=int,default=23,help="...")
+    parser.add_argument('-qlt','--quality',type=check_val_range,default=23,help="...")
     parser.add_argument('-cdc','--codec',type=str,default='libx264',help="Video codec")
     parser.add_argument('-prs','--preset',type=str,default='medium',help="...")
 
@@ -56,4 +56,4 @@ def main():
 
 
 if __name__=='__main__':
-    main() 
+    main()
