@@ -17,7 +17,7 @@ def check_source(file):
         raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"FILE NOT FOUND: File '{file}' not found."+Fore.RESET+Style.RESET_ALL)
 
 def check_val_range(n):
-    if n in range(0,52):
+    if int(n) in range(0,52):
         return n
     else:
         raise argparse.ArgumentTypeError(Fore.RED+Style.BRIGHT+f"VALUE OUT OF RANGE: Quality value must be in range 0 to 51."+Fore.RESET+Style.RESET_ALL)
