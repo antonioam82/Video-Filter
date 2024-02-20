@@ -45,7 +45,7 @@ def main():
     parser.add_argument('-dest','--destination',default='compessed_video.mp4',type=str,help="Output video name")
     parser.add_argument('-qlt','--quality',type=check_val_range,default=23,help="...")
     parser.add_argument('-cdc','--codec',type=str,default='libx264',help="Video codec")
-    parser.add_argument('-prs','--preset',type=str,default='medium',help="...")
+    parser.add_argument('-prs','--preset',type=str,default='medium',choices=['fast','ultrafast','medium','slow','veryslow'],help="...")
 
     try:
         args=parser.parse_args()
