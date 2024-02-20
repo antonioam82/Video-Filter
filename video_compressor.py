@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import ffmpeg
 import argparse
 from colorama import init, Back, Fore, Style
