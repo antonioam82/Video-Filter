@@ -219,7 +219,8 @@ def app(args):
     pbar.close()
 
     if check == True:
-        create_video(args)
+        #create_video(args)
+        print("Function not available yet :|")
     else:
         print("END")
 
