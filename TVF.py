@@ -164,7 +164,7 @@ def app(args):
                 pbar.update(ret)
 
             if stop == True:
-                frame_list = []##
+                frame_list = []
                 check = False
                 print(Fore.YELLOW + Style.DIM + "\nFrame processing interrupted by user." + Fore.RESET + Style.RESET_ALL)
                 pbar.disable = True
@@ -182,15 +182,15 @@ def app(args):
     else:
         print("END")
 
-    # ___________________________________________________________
-    '''if len(frame_list) > 0:
+   ''' # ___________________________________________________________
+    if len(frame_list) > 0:
         print("saving...")
         counter = 1
         for i in frame_list:
-            print(i)
-            cv.imwrite("frame"+str(counter)+".png",i)
-            counter += 1'''
-    #_____________________________________________________________
+            print("Frame: ",str(counter))
+            cv.imwrite("frame "+str(counter)+".png",i)
+            counter += 1
+    #_____________________________________________________________'''
     
 def check_audio(file):
     global mute
@@ -236,5 +236,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
