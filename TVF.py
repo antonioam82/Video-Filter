@@ -31,6 +31,39 @@ def create_video(args):
         print("Nombre Video: ", Pname)
         print("Extension: ", ex)
         out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
+        print("\nCREATING VIDEO -PRESS SPACE BAR TO CANCEL-")
+        pbar = tqdm(frame_list, unit='frames')
+        for frame in pbar:
+                out.write(frame)
+                
+                if stop == True:
+                    print(Fore.YELLOW + Style.DIM + "\nVideo creation interrupted by user." + Fore.RESET + Style.RESET_ALL)
+                    pbar.disable = True
+                    break
+        out.release()
+        pbar.close()#######
+
+        if stop == False:
+                vid = ffmpeg.input(temp_filename)
+
+                try:
+                    if mute == False and exaud == False:
+                        ffmpeg.output(audio, vid, vid_name).run()
+                        print(Fore.YELLOW + Style.DIM + f"\nSuccessfully created video '{vid_name}'" + Fore.RESET + Style.RESET_ALL)
+                    else:
+                        ffmpeg.output(vid, vid_name).run()
+                        print(Fore.YELLOW + Style.DIM + f"\nSuccessfully created video '{vid_name}'" + Fore.RESET + Style.RESET_ALL)
+                except Exception as e:
+                    error = str(e)
+                    if error != "ffmpeg error (see stderr output for detail)":
+                        print(Fore.RED + Style.DIM + "\n" + error + Fore.RESET + Style.RESET_ALL)
+                    else:
+                        for line in sys.stderr:
+                            print(line)
+
+                if temp_filename in os.listdir():
+                    os.remove(temp_filename)
+                    print("REMOVED {}".format(temp_filename))
         
     except Exception as e:
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
@@ -236,6 +269,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
 
 
 
