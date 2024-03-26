@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import cv2 as cv
-#import ffmpeg
+import ffmpeg
 import os
 import numpy as np
 from colorama import init, Fore, Back, Style
@@ -160,14 +160,22 @@ def apply_border_detection(fr):
     return edges
    
 def app(args):
-    global n_frames, frame_rate, height, width, audio, frame_list, check
+    global n_frames, frame_rate, height, width, audio_c, frame_list, check
     
-    cap = cv.VideoCapture(args.source)
+    '''cap = cv.VideoCapture(args.source)
     n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
     frame_rate = str(cap.get(cv.CAP_PROP_FPS))
     width = int(cap.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv.CAP_PROP_FRAME_HEIGHT))
-    audio = check_audio(args.source)
+    audio = check_audio(args.source)'''
+    probe = ffmpeg.probe(args.source)
+    video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+    n_frames = (video_streams[0]['nb_frames'])
+    height = (video_streams[0]['height'])
+    width = (video_streams[0]['width'])
+    frame_rate = (video_streams[0]['avg_frame_rate'])
+    audio_c = check_audio(args.source)
+    
 
     print(Fore.BLACK + Back.GREEN + "\n T E R M I N A L   V I D E O   F I L T E R   v: 1.0 " + Fore.RESET + Back.RESET)
     print(Fore.YELLOW + "\n*********************VIDEO DATA*********************")
@@ -176,7 +184,7 @@ def app(args):
     print(f'Frame Rate: {frame_rate}')
     print(f'Frames Width: {width}')
     print(f'Frames Height: {height}')
-    print(f'Audio Stream: {audio}')
+    print(f'Audio Stream: {audio_c}')
     print("****************************************************\n" + Fore.RESET)
 
     print(args.source)
@@ -225,7 +233,7 @@ def app(args):
             counter += 1'''
     #_____________________________________________________________
     
-def check_audio(file):
+'''def check_audio(file):
     global mute
     try:
         audio = AudioSegment.from_file(file)
@@ -234,7 +242,17 @@ def check_audio(file):
         return True
     except Exception as e:
         mute = True
-        return False
+        return False'''
+
+def check_audio(file):
+    global mute
+    audio_probe = ffmpeg.probe(file, select_streams='a')
+    if audio_probe['streams']:
+        mute = False
+        return "Yes"
+    else:
+        mute = True
+        return "No"
 
 def main():
     global vid_name, exaud
