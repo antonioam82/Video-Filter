@@ -276,7 +276,7 @@ def main():
     mutually_exclusive_group = parser.add_mutually_exclusive_group()
 
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
-    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', nargs=3, type=int, help='...')
+    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', type=int, help='...')# nargs=3
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
     mutually_exclusive_group.add_argument('-blr', '--blur', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-mblr', '--median_blur', action='store_true', help='...')
