@@ -277,14 +277,14 @@ def main():
 
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
     mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', type=int, help='...')# nargs=3
-    mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')
+    mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')#
     mutually_exclusive_group.add_argument('-blr', '--blur', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-mblr', '--median_blur', action='store_true', help='...')
-    mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')
+    mutually_exclusive_group.add_argument('-skt', '--sketch', action='store_true', help='...')#
     mutually_exclusive_group.add_argument('-crt', '--cathode_ray_tube', action='store_true',help='...')
     mutually_exclusive_group.add_argument('-neg', '--negative', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-dist','--distorsed',action='store_true', help='Apply distorsed effect on video.')
-    mutually_exclusive_group.add_argument('-can','--canny',action='store_true', help='Get borders.')
+    mutually_exclusive_group.add_argument('-can','--canny',action='store_true', help='Get borders.')#
     
     args = parser.parse_args()
 
