@@ -24,13 +24,15 @@ check = True
 
 def create_video(args):
     try:
-        vid_name = args.destination
-        Pname, ex = os.path.splitext(vid_name)
-        Pfile = Pname+"_mp4"
+        #vid_name = args.destination
+        #Pname, ex = os.path.splitext(vid_name)
+        #Pfile = Pname+"_mp4"
         
-        print("Nombre Video: ", Pname)
-        print("Extension: ", ex)
-        out = cv.VideoWriter(Pfile,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
+        #print("Nombre Video: ", Pname)
+        #print("Extension: ", ex)
+        with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
+            temp_filename = temp_file.name
+        out = cv.VideoWriter(temp_filename,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
         print("\nCREATING VIDEO -PRESS SPACE BAR TO CANCEL-")
         pbar = tqdm(frame_list, unit='frames')
         for frame in pbar:
@@ -197,6 +199,9 @@ def app(args):
     ffmp_input = ffmpeg.input(args.source)
     if mute == False and exaud == False:
         audio = ffmp_input.audio
+        print("Extracted audio")
+    else:
+        print("Not audio to extract")
     ##########################################
         
     ret = True
