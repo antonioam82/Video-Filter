@@ -162,7 +162,7 @@ def apply_border_detection(fr):
     return edges
    
 def app(args):
-    global n_frames, frame_rate, height, width, audio_c, frame_list, check
+    global n_frames, frame_rate, height, width, audio_c, frame_list, check, audio
     
     '''cap = cv.VideoCapture(args.source)
     n_frames = int(cap.get(cv.CAP_PROP_FRAME_COUNT))
@@ -230,8 +230,8 @@ def app(args):
     pbar.close()
 
     if check == True:
-        #create_video(args)
-        print("Function not available yet :|")
+        create_video(args)
+        #print("Function not available yet :|")
     else:
         print("END")
 
