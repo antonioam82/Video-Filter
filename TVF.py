@@ -111,7 +111,7 @@ def apply_filter(args,fr):
         negative = np.zeros(fr.shape, fr.dtype)
         edited_frame = negative_filter(negative,fr)
     elif args.bilateral_filter:
-        edited_frame = cv.bilateralFilter(fr,args.bilateral_filter[0],args.bilateral_filter[1],args.bilateral_filter[2])
+        edited_frame = cv.bilateralFilter(fr,9,75,75)
     elif args.cathode_ray_tube:
         edited_frame = apply_crt_effect(fr)
     elif args.distorsed:
@@ -276,7 +276,7 @@ def main():
     mutually_exclusive_group = parser.add_mutually_exclusive_group()
 
     mutually_exclusive_group.add_argument('-cont', '--contrast', default=0.0, help='Gamma value for contrast effect')
-    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter', type=int, help='...')# nargs=3
+    mutually_exclusive_group.add_argument('-bf', '--bilateral_filter',action='store_true', help='...')# nargs=3
     mutually_exclusive_group.add_argument('-sharp', '--sharp_filter', type=str, help='...')#
     mutually_exclusive_group.add_argument('-blr', '--blur', action='store_true', help='...')
     mutually_exclusive_group.add_argument('-mblr', '--median_blur', action='store_true', help='...')
