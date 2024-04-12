@@ -33,6 +33,7 @@ def create_video(args):
         with NamedTemporaryFile(suffix=ex, delete=False) as temp_file:
             temp_filename = temp_file.name
         out = cv.VideoWriter(temp_filename,cv.VideoWriter_fourcc(*'XVID'), eval(frame_rate), (width, height))
+        print(out)############################################3
         print("\nCREATING VIDEO -PRESS SPACE BAR TO CANCEL-")
         pbar = tqdm(frame_list, unit='frames')
         for frame in pbar:
@@ -69,6 +70,8 @@ def create_video(args):
         
     except Exception as e:
         print(Fore.RED+Style.DIM+"\n"+str(e)+Fore.RESET+Style.RESET_ALL)
+
+
 
 def check_extension(file):
     global ex
